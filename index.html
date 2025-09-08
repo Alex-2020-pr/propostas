@@ -390,6 +390,35 @@
             border-bottom: 2px solid #ffcc80;
         }
 
+        .proposal-type-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .proposal-type-btn {
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .proposal-type-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .proposal-type-btn.active {
+            border-color: var(--secondary);
+            background: var(--secondary);
+            color: white;
+        }
+
         @media print {
             body {
                 background: white;
@@ -483,6 +512,16 @@
                     <div class="form-group">
                         <label for="proposalName">Nome da Proposta (opcional):</label>
                         <input type="text" id="proposalName" placeholder="Ex: Proposta para Hospital São Lucas">
+                    </div>
+                </div>
+
+                <!-- Seletor de Tipo de Proposta -->
+                <div class="form-group">
+                    <h3>Selecione o Tipo de Proposta:</h3>
+                    <div class="proposal-type-selector">
+                        <button class="proposal-type-btn" data-type="aberta">PROPOSTA ABERTA</button>
+                        <button class="proposal-type-btn" data-type="essencial">SGH ESSENCIAL</button>
+                        <button class="proposal-type-btn" data-type="todas">TODAS SOLUÇÕES</button>
                     </div>
                 </div>
 
@@ -580,7 +619,7 @@
                 
                 <div class="admin-grid">
                     <div class="admin-card">
-                        <h3>Hotéis Normais</h3>
+                        <h3>Módulos Normais</h3>
                         <div class="form-group">
                             <label for="adminModuleSelect">Selecione um Módulo:</label>
                             <select id="adminModuleSelect" style="width: 100%; padding: 10px;">
@@ -630,8 +669,8 @@
                 <thead>
                     <tr>
                         <th>Módulo</th>
-                        <th>Valor Mensal (R$)</th>
-                        <th>Valor Implantação (R$)</th>
+                        <th>Valor Mensal</th>
+                        <th>Valor Implantação</th>
                     </tr>
                 </thead>
                 <tbody id="proposalTableBody">
@@ -642,15 +681,15 @@
             <div class="total-section">
                 <div class="total-row">
                     <span>Valor Total Mensal:</span>
-                    <strong id="totalMensal">R$ 0,00</strong>
+                    <strong id="totalMensal">R$0,00</strong>
                 </div>
                 <div class="total-row">
                     <span>Valor Total de Implantação:</span>
-                    <strong id="totalImplantacao">R$ 0,00</strong>
+                    <strong id="totalImplantacao">R$0,00</strong>
                 </div>
                 <div class="total-row" style="font-size: 1.8rem; margin-top: 20px; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 20px;">
                     <span>Valor Total da Proposta (à vista):</span>
-                    <strong id="totalGeral">R$ 0,00</strong>
+                    <strong id="totalGeral">R$0,00</strong>
                 </div>
             </div>
 
@@ -658,11 +697,11 @@
                 <h3>Parcelamento da Taxa de Implantação</h3>
                 <div class="total-row">
                     <span>Valor por Parcela (sem juros):</span>
-                    <strong id="parcelaValor">R$ 0,00</strong>
+                    <strong id="parcelaValor">R$0,00</strong>
                 </div>
                 <div class="total-row">
                     <span>Total em Parcelas:</span>
-                    <strong id="parcelaTotal">R$ 0,00</strong>
+                    <strong id="parcelaTotal">R$0,00</strong>
                 </div>
                 <div class="total-row">
                     <span>Forma de Pagamento:</span>
@@ -2000,10 +2039,26 @@
             "SMS"
         ];
 
+        // Módulos do pacote SGH ESSENCIAL
+        const sghEssencialModules = [
+            "Faturamento de AIH",
+            "Faturamento de Ambulatório",
+            "Faturamento de Convênios",
+            "DMED",
+            "Chamada Digital",
+            "Recepção Interna",
+            "Recepção Externa",
+            "App Checagem Oncológica PEP",
+            "Controle de Estoque",
+            "Financeiro",
+            "Painel Estatístico_Gestão a Vista (Web/CS)"
+        ];
+
         // Inicializa os eventos e carrega dados salvos
         document.addEventListener('DOMContentLoaded', function() {
             setupTabs();
             setupEstablishmentChangeListener();
+            setupProposalTypeButtons();
             loadModules();
             loadAdminModuleLists();
             loadSavedData();
@@ -2013,11 +2068,8 @@
         function setupTabs() {
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', function() {
-                    // Remove classe 'active' de todos
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
-                    // Adiciona 'active' ao clicado
                     this.classList.add('active');
                     const tabId = this.getAttribute('data-tab');
                     document.getElementById(tabId).classList.add('active');
@@ -2051,6 +2103,65 @@
                     bedRangeSelect.appendChild(option);
                 });
             }
+        }
+
+        function setupProposalTypeButtons() {
+            document.querySelectorAll('.proposal-type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove classe 'active' de todos
+                    document.querySelectorAll('.proposal-type-btn').forEach(b => b.classList.remove('active'));
+                    // Adiciona 'active' ao clicado
+                    this.classList.add('active');
+
+                    const type = this.getAttribute('data-type');
+                    applyProposalType(type);
+                });
+            });
+        }
+
+        function applyProposalType(type) {
+            // Desmarca todos os checkboxes
+            document.querySelectorAll('#modulesList input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+
+            if (type === 'essencial') {
+                // Marca os módulos do SGH ESSENCIAL
+                sghEssencialModules.forEach(moduleName => {
+                    const checkboxId = `module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                    const checkbox = document.getElementById(checkboxId);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                });
+            } else if (type === 'todas') {
+                // Marca todos os módulos
+                document.querySelectorAll('#modulesList input[type="checkbox"]').forEach(cb => {
+                    cb.checked = true;
+                });
+            }
+            // Se for 'aberta', não marca nada (já desmarcado)
+
+            // Mostra/oculta configurações especiais conforme necessário
+            updateSpecialConfigsVisibility();
+        }
+
+        function updateSpecialConfigsVisibility() {
+            const specialModules = ["Agendamento Online", "CARTÃO DE DESCONTO", "SGO", "SMS"];
+            specialModules.forEach(moduleName => {
+                const checkboxId = `module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                const checkbox = document.getElementById(checkboxId);
+                const configId = {
+                    "Agendamento Online": "agendamentoConfig",
+                    "CARTÃO DE DESCONTO": "cartaoConfig",
+                    "SGO": "sgoConfig",
+                    "SMS": "smsConfig"
+                }[moduleName];
+
+                if (checkbox && configId) {
+                    document.getElementById(configId).style.display = checkbox.checked ? 'block' : 'none';
+                }
+            });
         }
 
         function loadModules() {
@@ -2248,7 +2359,6 @@
                 const key = input.dataset.key;
                 const value = parseFloat(input.value) || 0;
 
-                // Parse the key: estab_range_moduleName
                 const parts = key.split('_');
                 const estab = parts[0];
                 const range = parts[1];
@@ -2384,6 +2494,14 @@
             return valorMensal * 10;
         }
 
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                minimumFractionDigits: 2
+            }).format(value);
+        }
+
         function generateProposal() {
             const establishment = document.getElementById('establishment').value;
             const bedRange = document.getElementById('bedRange').value;
@@ -2435,14 +2553,14 @@
                         row.appendChild(nameCell);
 
                         const mensalCell = document.createElement('td');
-                        mensalCell.textContent = `R$ ${valorMensal.toFixed(2).replace('.', ',')}`;
+                        mensalCell.textContent = formatCurrency(valorMensal);
                         mensalCell.className = 'editable';
                         mensalCell.dataset.type = 'mensal';
                         mensalCell.addEventListener('click', makeEditable);
                         row.appendChild(mensalCell);
 
                         const implantacaoCell = document.createElement('td');
-                        implantacaoCell.textContent = `R$ ${valorImplantacao.toFixed(2).replace('.', ',')}`;
+                        implantacaoCell.textContent = formatCurrency(valorImplantacao);
                         implantacaoCell.className = 'editable';
                         implantacaoCell.dataset.type = 'implantacao';
                         implantacaoCell.addEventListener('click', makeEditable);
@@ -2462,12 +2580,12 @@
             const parcelaValor = totalImplantacao / installmentCount;
             const parcelaTotal = parcelaValor * installmentCount;
 
-            document.getElementById('totalMensal').textContent = `R$ ${totalMensal.toFixed(2).replace('.', ',')}`;
-            document.getElementById('totalImplantacao').textContent = `R$ ${totalImplantacao.toFixed(2).replace('.', ',')}`;
-            document.getElementById('totalGeral').textContent = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
-            document.getElementById('parcelaValor').textContent = `R$ ${parcelaValor.toFixed(2).replace('.', ',')}`;
-            document.getElementById('parcelaTotal').textContent = `R$ ${parcelaTotal.toFixed(2).replace('.', ',')}`;
-            document.getElementById('formaPagamento').textContent = `${installmentCount}x de R$ ${parcelaValor.toFixed(2).replace('.', ',')} sem juros`;
+            document.getElementById('totalMensal').textContent = formatCurrency(totalMensal);
+            document.getElementById('totalImplantacao').textContent = formatCurrency(totalImplantacao);
+            document.getElementById('totalGeral').textContent = formatCurrency(totalGeral);
+            document.getElementById('parcelaValor').textContent = formatCurrency(parcelaValor);
+            document.getElementById('parcelaTotal').textContent = formatCurrency(parcelaTotal);
+            document.getElementById('formaPagamento').textContent = `${installmentCount}x de ${formatCurrency(parcelaValor)} sem juros`;
 
             // Mostra o resultado
             document.getElementById('proposalResult').style.display = 'block';
@@ -2490,7 +2608,7 @@
 
         function makeEditable(event) {
             const cell = event.target;
-            const currentValue = parseFloat(cell.textContent.replace('R$ ', '').replace(',', '.'));
+            const currentValue = parseFloat(cell.textContent.replace(/[^\d,-]/g, '').replace(',', '.'));
 
             const input = document.createElement('input');
             input.type = 'number';
@@ -2504,7 +2622,7 @@
 
             input.addEventListener('blur', function() {
                 const newValue = parseFloat(this.value) || 0;
-                cell.textContent = `R$ ${newValue.toFixed(2).replace('.', ',')}`;
+                cell.textContent = formatCurrency(newValue);
                 this.remove();
                 recalculateTotals();
             });
@@ -2530,8 +2648,8 @@
                 const implantacaoCell = row.cells[2];
 
                 if (mensalCell && implantacaoCell) {
-                    const mensalValue = parseFloat(mensalCell.textContent.replace('R$ ', '').replace(',', '.')) || 0;
-                    const implantacaoValue = parseFloat(implantacaoCell.textContent.replace('R$ ', '').replace(',', '.')) || 0;
+                    const mensalValue = parseFloat(mensalCell.textContent.replace(/[^\d,-]/g, '').replace(',', '.')) || 0;
+                    const implantacaoValue = parseFloat(implantacaoCell.textContent.replace(/[^\d,-]/g, '').replace(',', '.')) || 0;
 
                     totalMensal += mensalValue;
                     totalImplantacao += implantacaoValue;
@@ -2543,12 +2661,12 @@
             const parcelaValor = totalImplantacao / installmentCount;
             const parcelaTotal = parcelaValor * installmentCount;
 
-            document.getElementById('totalMensal').textContent = `R$ ${totalMensal.toFixed(2).replace('.', ',')}`;
-            document.getElementById('totalImplantacao').textContent = `R$ ${totalImplantacao.toFixed(2).replace('.', ',')}`;
-            document.getElementById('totalGeral').textContent = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
-            document.getElementById('parcelaValor').textContent = `R$ ${parcelaValor.toFixed(2).replace('.', ',')}`;
-            document.getElementById('parcelaTotal').textContent = `R$ ${parcelaTotal.toFixed(2).replace('.', ',')}`;
-            document.getElementById('formaPagamento').textContent = `${installmentCount}x de R$ ${parcelaValor.toFixed(2).replace('.', ',')} sem juros`;
+            document.getElementById('totalMensal').textContent = formatCurrency(totalMensal);
+            document.getElementById('totalImplantacao').textContent = formatCurrency(totalImplantacao);
+            document.getElementById('totalGeral').textContent = formatCurrency(totalGeral);
+            document.getElementById('parcelaValor').textContent = formatCurrency(parcelaValor);
+            document.getElementById('parcelaTotal').textContent = formatCurrency(parcelaTotal);
+            document.getElementById('formaPagamento').textContent = `${installmentCount}x de ${formatCurrency(parcelaValor)} sem juros`;
         }
 
         function saveCurrentProposal() {
@@ -2558,11 +2676,8 @@
             const proposalName = document.getElementById('proposalName').value || `Proposta ${new Date().toLocaleDateString()}`;
             proposalData.name = proposalName;
 
-            // Carrega histórico existente
             let history = JSON.parse(localStorage.getItem('spdataProposalHistory') || '[]');
-            // Adiciona nova proposta no início
             history.unshift(proposalData);
-            // Salva no LocalStorage
             localStorage.setItem('spdataProposalHistory', JSON.stringify(history));
 
             alert(`✅ Proposta "${proposalName}" salva com sucesso!`);
@@ -2596,9 +2711,9 @@
                     <h4>${proposal.name}</h4>
                     <p><strong>Data:</strong> ${formattedDate}</p>
                     <p><strong>Estabelecimento:</strong> ${proposal.establishment} - ${proposal.bedRange}</p>
-                    <p><strong>Total Mensal:</strong> R$ ${proposal.totals.monthly.toFixed(2).replace('.', ',')}</p>
-                    <p><strong>Total Implantação:</strong> R$ ${proposal.totals.implantation.toFixed(2).replace('.', ',')}</p>
-                    <p><strong>Total Geral:</strong> R$ ${proposal.totals.total.toFixed(2).replace('.', ',')}</p>
+                    <p><strong>Total Mensal:</strong> ${formatCurrency(proposal.totals.monthly)}</p>
+                    <p><strong>Total Implantação:</strong> ${formatCurrency(proposal.totals.implantation)}</p>
+                    <p><strong>Total Geral:</strong> ${formatCurrency(proposal.totals.total)}</p>
                     <p><strong>Módulos:</strong> ${proposal.selectedModules.map(m => m.name).join(', ')}</p>
                 `;
 
@@ -2612,7 +2727,6 @@
 
             if (!proposal) return;
 
-            // Preenche os campos do formulário
             document.getElementById('establishment').value = proposal.establishment;
             updateBedRangeOptions();
             setTimeout(() => {
@@ -2620,7 +2734,6 @@
                 document.getElementById('installmentCount').value = proposal.installmentCount;
                 document.getElementById('proposalName').value = proposal.name;
 
-                // Limpa seleções anteriores
                 document.querySelectorAll('#modulesList input[type="checkbox"]').forEach(cb => {
                     cb.checked = false;
                     const configId = {
@@ -2634,7 +2747,6 @@
                     }
                 });
 
-                // Seleciona os módulos da proposta
                 proposal.selectedModules.forEach(module => {
                     const checkboxId = `module_${module.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
                     const checkbox = document.getElementById(checkboxId);
@@ -2654,10 +2766,7 @@
                     }
                 });
 
-                // Muda para a tab de proposta
                 document.querySelector('[data-tab="proposal"]').click();
-
-                // Gera a proposta
                 generateProposal();
 
                 alert(`✅ Proposta "${proposal.name}" carregada com sucesso!`);
@@ -2690,15 +2799,15 @@
             const lastRow = XLSX.utils.decode_range(ws['!ref']).e.r + 2;
 
             ws[`A${lastRow}`] = { v: "TOTAL MENSAL", t: 's' };
-            ws[`B${lastRow}`] = { v: parseFloat(document.getElementById('totalMensal').textContent.replace('R$ ', '').replace(',', '.')), t: 'n' };
+            ws[`B${lastRow}`] = { v: parseFloat(document.getElementById('totalMensal').textContent.replace(/[^\d,-]/g, '').replace(',', '.')), t: 'n' };
             ws[`B${lastRow}`].z = '#,##0.00';
 
             ws[`A${lastRow + 1}`] = { v: "TOTAL IMPLANTAÇÃO", t: 's' };
-            ws[`B${lastRow + 1}`] = { v: parseFloat(document.getElementById('totalImplantacao').textContent.replace('R$ ', '').replace(',', '.')), t: 'n' };
+            ws[`B${lastRow + 1}`] = { v: parseFloat(document.getElementById('totalImplantacao').textContent.replace(/[^\d,-]/g, '').replace(',', '.')), t: 'n' };
             ws[`B${lastRow + 1}`].z = '#,##0.00';
 
             ws[`A${lastRow + 2}`] = { v: "TOTAL GERAL", t: 's' };
-            ws[`B${lastRow + 2}`] = { v: parseFloat(document.getElementById('totalGeral').textContent.replace('R$ ', '').replace(',', '.')), t: 'n' };
+            ws[`B${lastRow + 2}`] = { v: parseFloat(document.getElementById('totalGeral').textContent.replace(/[^\d,-]/g, '').replace(',', '.')), t: 'n' };
             ws[`B${lastRow + 2}`].z = '#,##0.00';
 
             ws[`A${lastRow + 4}`] = { v: "PARCELAS", t: 's' };
