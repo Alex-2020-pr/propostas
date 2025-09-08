@@ -269,12 +269,35 @@
             font-size: 1.5rem;
         }
 
+        .installment-section {
+            background: #f1f8e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #c5e1a5;
+        }
+
+        .installment-section h3 {
+            color: #33691e;
+            margin-bottom: 15px;
+        }
+
         .action-buttons {
             text-align: center;
             margin-top: 30px;
             padding: 20px 0;
             background: #f8f9fa;
             border-radius: 10px;
+        }
+
+        .validity-notice {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+            font-weight: 500;
+            color: #856404;
         }
 
         @media print {
@@ -337,6 +360,24 @@
                     <label for="bedRange">Faixa / Categoria:</label>
                     <select id="bedRange">
                         <option value="">Selecione o tipo de estabelecimento primeiro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="installmentCount">Parcelamento da Taxa de Implantação:</label>
+                    <select id="installmentCount">
+                        <option value="1">À vista (1x)</option>
+                        <option value="2">2x sem juros</option>
+                        <option value="3">3x sem juros</option>
+                        <option value="4">4x sem juros</option>
+                        <option value="5">5x sem juros</option>
+                        <option value="6">6x sem juros</option>
+                        <option value="7">7x sem juros</option>
+                        <option value="8">8x sem juros</option>
+                        <option value="9">9x sem juros</option>
+                        <option value="10">10x sem juros</option>
+                        <option value="11">11x sem juros</option>
+                        <option value="12">12x sem juros</option>
                     </select>
                 </div>
             </div>
@@ -416,6 +457,11 @@
 
         <div class="card">
             <h2>3. Sua Proposta Comercial</h2>
+
+            <div class="validity-notice">
+                ⚠️ <strong>Esta proposta tem validade de 30 dias</strong> a partir da data de emissão.
+            </div>
+
             <table class="proposal-table">
                 <thead>
                     <tr>
@@ -437,12 +483,28 @@
                     <strong id="totalMensal">R$ 0,00</strong>
                 </div>
                 <div class="total-row">
-                    <span>Valor Total de Implantação (3x):</span>
+                    <span>Valor Total de Implantação:</span>
                     <strong id="totalImplantacao">R$ 0,00</strong>
                 </div>
                 <div class="total-row" style="font-size: 1.8rem; margin-top: 20px; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 20px;">
-                    <span>Valor Total da Proposta:</span>
+                    <span>Valor Total da Proposta (à vista):</span>
                     <strong id="totalGeral">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <div class="installment-section">
+                <h3>Parcelamento da Taxa de Implantação</h3>
+                <div class="total-row">
+                    <span>Valor por Parcela (sem juros):</span>
+                    <strong id="parcelaValor">R$ 0,00</strong>
+                </div>
+                <div class="total-row">
+                    <span>Total em Parcelas:</span>
+                    <strong id="parcelaTotal">R$ 0,00</strong>
+                </div>
+                <div class="total-row">
+                    <span>Forma de Pagamento:</span>
+                    <strong id="formaPagamento">-</strong>
                 </div>
             </div>
 
@@ -1642,6 +1704,71 @@
                     "1000": 180.00,
                     "5000": 720.00,
                     "10000": 1200.00
+                },
+                // TAXA DE IMPLANTAÇÃO BASEADA NA PLANILHA ANEXA
+                "implantacao": {
+                    "Faturamento de AIH": 4800.00,
+                    "Faturamento de Ambulatório": 2400.00,
+                    "Faturamento de Convênios": 7200.00,
+                    "Controle de Estoque": 4800.00,
+                    "Recepção Interna": 2400.00,
+                    "Recepção Externa": 2400.00,
+                    "SADT - Radiologia": 1800.00,
+                    "SADT - Laboratório": 4200.00,
+                    "SADT - Endoscopia": 2400.00,
+                    "SADT - Anatomia Patológica": 2400.00,
+                    "SADT - Ultra-Sonografia": 2400.00,
+                    "Bloco Cirúrgico": 2400.00,
+                    "SADT - Tomografia": 2400.00,
+                    "Contabilidade": 4200.00,
+                    "Financeiro": 4800.00,
+                    "APAC": 3600.00,
+                    "Custos": 4200.00,
+                    "SADT - Hemodinâmica": 2400.00,
+                    "Folha de Pagamento": 16000.00,
+                    "Patrimônio": 1800.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 2400.00,
+                    "Orçamento": 1800.00,
+                    "SADT- Ressonância Magnética": 2400.00,
+                    "SGHIntelligence": 7200.00,
+                    "Agendamento (normal)": 1800.00,
+                    "Agendamento de Quimmioterapia": 2400.00,
+                    "Agendamento de Plantão": 1800.00,
+                    "SADT- Hemoterapia": 2400.00,
+                    "Painel Eletrônico*": 1800.00,
+                    "PACs (apenas Worklist)": 1800.00,
+                    "SPED": 1200.00,
+                    "Gestão de Repasse e Terceiros": 3000.00,
+                    "SAC *": 600.00,
+                    "Controle de Acessos": 1800.00,
+                    "Higienização de Leitos *": 1200.00,
+                    "DMED": 1200.00,
+                    "Web Service DICOM": 1200.00,
+                    "Integrador Laboratório Web Service": 1200.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 1200.00,
+                    "App Checagem Oncológica PEP": 1200.00,
+                    "Nota Fiscal Eletrônica": 1800.00,
+                    "Portal de Serviços": 1800.00,
+                    "Laudo Web": 1200.00,
+                    "SGHQuali": 7200.00,
+                    "Portal de Compras": 6600.00,
+                    "Chamada Digital": 1800.00,
+                    "EFD REINF": 3000.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 2400.00,
+                    "CEMEX": 9500.00,
+                    "Interação API (Laudos)": 1800.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 2400.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 1800.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 1800.00,
+                    "Agendamento Online": 3200.00, // Valor base (Call Center até 1000)
+                    "CARTÃO DE DESCONTO": 7200.00,   // Valor base (até 5000 vidas)
+                    "SGO": 3000.00,                   // Valor mínimo
+                    "SMS": 1800.00                    // Valor base (1000 SMS)
                 }
             }
         };
@@ -1830,9 +1957,40 @@
             }
         }
 
+        function getImplantacaoValue(moduleName) {
+            // Verifica se é módulo especial
+            if (["Agendamento Online", "CARTÃO DE DESCONTO", "SGO", "SMS"].includes(moduleName)) {
+                return pricingData.special.implantacao[moduleName] || 0;
+            }
+
+            // Para módulos normais, usa a tabela de implantação
+            const establishment = document.getElementById('establishment').value;
+            const bedRange = document.getElementById('bedRange').value;
+
+            if (!establishment || !bedRange) return 0;
+
+            // Se o módulo existe na tabela de implantação, retorna o valor fixo
+            if (pricingData.special.implantacao[moduleName]) {
+                return pricingData.special.implantacao[moduleName];
+            }
+
+            // Caso contrário, tenta calcular com base no valor mensal (fallback)
+            let valorMensal = 0;
+            if (pricingData[establishment] && pricingData[establishment][bedRange]) {
+                valorMensal = pricingData[establishment][bedRange][moduleName] || 0;
+                if (typeof valorMensal === 'string') {
+                    valorMensal = 0;
+                }
+            }
+
+            // Fallback: 10x o valor mensal (conforme prática comum em implantações)
+            return valorMensal * 10;
+        }
+
         function generateProposal() {
             const establishment = document.getElementById('establishment').value;
             const bedRange = document.getElementById('bedRange').value;
+            const installmentCount = parseInt(document.getElementById('installmentCount').value) || 1;
 
             if (!establishment || !bedRange) {
                 alert("⚠️ Por favor, selecione o tipo de estabelecimento e a faixa.");
@@ -1843,6 +2001,7 @@
             tableBody.innerHTML = '';
 
             let totalMensal = 0;
+            let totalImplantacao = 0;
 
             allModules.forEach(moduleName => {
                 const checkbox = document.getElementById(`module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`);
@@ -1864,8 +2023,9 @@
                     }
 
                     if (valorMensal > 0) {
-                        const valorImplantacao = valorMensal * 3; // 3x o valor mensal
+                        const valorImplantacao = getImplantacaoValue(moduleName);
                         totalMensal += valorMensal;
+                        totalImplantacao += valorImplantacao;
 
                         const row = document.createElement('tr');
 
@@ -1897,15 +2057,22 @@
                 document.getElementById('totalMensal').textContent = 'R$ 0,00';
                 document.getElementById('totalImplantacao').textContent = 'R$ 0,00';
                 document.getElementById('totalGeral').textContent = 'R$ 0,00';
+                document.getElementById('parcelaValor').textContent = 'R$ 0,00';
+                document.getElementById('parcelaTotal').textContent = 'R$ 0,00';
+                document.getElementById('formaPagamento').textContent = '-';
                 return;
             }
 
-            const totalImplantacao = totalMensal * 3;
             const totalGeral = totalMensal + totalImplantacao;
+            const parcelaValor = totalImplantacao / installmentCount;
+            const parcelaTotal = parcelaValor * installmentCount;
 
             document.getElementById('totalMensal').textContent = `R$ ${totalMensal.toFixed(2).replace('.', ',')}`;
             document.getElementById('totalImplantacao').textContent = `R$ ${totalImplantacao.toFixed(2).replace('.', ',')}`;
             document.getElementById('totalGeral').textContent = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
+            document.getElementById('parcelaValor').textContent = `R$ ${parcelaValor.toFixed(2).replace('.', ',')}`;
+            document.getElementById('parcelaTotal').textContent = `R$ ${parcelaTotal.toFixed(2).replace('.', ',')}`;
+            document.getElementById('formaPagamento').textContent = `${installmentCount}x de R$ ${parcelaValor.toFixed(2).replace('.', ',')} sem juros`;
         }
 
         function makeEditable(event) {
@@ -1958,18 +2125,24 @@
                 }
             });
 
+            const installmentCount = parseInt(document.getElementById('installmentCount').value) || 1;
             const totalGeral = totalMensal + totalImplantacao;
+            const parcelaValor = totalImplantacao / installmentCount;
+            const parcelaTotal = parcelaValor * installmentCount;
 
             document.getElementById('totalMensal').textContent = `R$ ${totalMensal.toFixed(2).replace('.', ',')}`;
             document.getElementById('totalImplantacao').textContent = `R$ ${totalImplantacao.toFixed(2).replace('.', ',')}`;
             document.getElementById('totalGeral').textContent = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
+            document.getElementById('parcelaValor').textContent = `R$ ${parcelaValor.toFixed(2).replace('.', ',')}`;
+            document.getElementById('parcelaTotal').textContent = `R$ ${parcelaTotal.toFixed(2).replace('.', ',')}`;
+            document.getElementById('formaPagamento').textContent = `${installmentCount}x de R$ ${parcelaValor.toFixed(2).replace('.', ',')} sem juros`;
         }
 
         function exportToExcel() {
             const table = document.querySelector('.proposal-table');
             const wb = XLSX.utils.table_to_book(table, { sheet: "Proposta Spdata" });
 
-            // Adiciona os totais como uma nova linha no final
+            // Adiciona os totais como novas linhas
             const ws = wb.Sheets[wb.SheetNames[0]];
             const lastRow = XLSX.utils.decode_range(ws['!ref']).e.r + 2;
 
@@ -1985,6 +2158,12 @@
             ws[`B${lastRow + 2}`] = { v: parseFloat(document.getElementById('totalGeral').textContent.replace('R$ ', '').replace(',', '.')), t: 'n' };
             ws[`B${lastRow + 2}`].z = '#,##0.00';
 
+            ws[`A${lastRow + 4}`] = { v: "PARCELAS", t: 's' };
+            ws[`B${lastRow + 4}`] = { v: document.getElementById('formaPagamento').textContent, t: 's' };
+
+            ws[`A${lastRow + 5}`] = { v: "VALIDADE", t: 's' };
+            ws[`B${lastRow + 5}`] = { v: "30 dias", t: 's' };
+
             // Ajusta o tamanho das colunas
             const colWidths = [
                 { wch: 40 }, // Módulo
@@ -1997,5 +2176,4 @@
         }
     </script>
 </body>
-
 </html>
