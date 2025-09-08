@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Propostas - Spdata</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--secondary);
+            font-size: 1.8rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background-color: #fafafa;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background-color: white;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .module-item {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .module-item:hover {
+            background: #e3f2fd;
+            border-color: var(--secondary);
+        }
+
+        .module-item input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .module-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .special-config {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid var(--secondary);
+            display: none;
+        }
+
+        .special-config h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-print {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-export {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .proposal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .proposal-table th,
+        .proposal-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .proposal-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .proposal-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .proposal-table tbody tr:hover {
+            background-color: #e3f2fd;
+        }
+
+        .editable {
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .editable:hover {
+            background: #fff9c4;
+        }
+
+        .total-section {
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: right;
+        }
+
+        .total-section .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            padding: 10px 0;
+        }
+
+        .total-section .total-row strong {
+            font-size: 1.5rem;
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .card {
+                box-shadow: none;
+                margin: 0;
+                padding: 20px;
+            }
+            .btn {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .module-grid {
+                grid-template-columns: 1fr;
+            }
+            .proposal-table {
+                font-size: 0.9rem;
+            }
+            .proposal-table th,
+            .proposal-table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gerador de Propostas Comerciais</h1>
+            <p>Spdata - Soluções em Tecnologia para Saúde</p>
+        </header>
+
+        <div class="card no-print">
+            <h2>1. Configurações da Proposta</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="establishment">Tipo de Estabelecimento:</label>
+                    <select id="establishment">
+                        <option value="">Selecione...</option>
+                        <option value="filantropico">HOSP FILANTROPICO</option>
+                        <option value="privado">HOSP PRIVADO</option>
+                        <option value="publico">HOSP PUBLICO</option>
+                        <option value="demais">DEMAIS ESTABELECIMENTOS</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bedRange">Faixa / Categoria:</label>
+                    <select id="bedRange">
+                        <option value="">Selecione o tipo de estabelecimento primeiro</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card no-print">
+            <h2>2. Selecione os Módulos</h2>
+            <div class="module-grid" id="modulesList">
+                <!-- Módulos serão carregados aqui -->
+            </div>
+
+            <!-- Configuração Especial para Agendamento Online -->
+            <div id="agendamentoConfig" class="special-config">
+                <h3>Configuração do Agendamento Online</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Tipo de Agendamento:</label>
+                        <select id="agendamentoType">
+                            <option value="pacientes">Pacientes</option>
+                            <option value="callcenter">Call Center</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantidade de Agendamentos/Mês:</label>
+                        <input type="number" id="agendamentoQty" min="1" value="1000" step="1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuração Especial para Cartão de Desconto -->
+            <div id="cartaoConfig" class="special-config">
+                <h3>Configuração do Cartão de Desconto</h3>
+                <div class="form-group">
+                    <label>Número de Vidas:</label>
+                    <input type="number" id="cartaoVidas" min="1" value="5000" step="1">
+                </div>
+            </div>
+
+            <!-- Configuração Especial para SGO -->
+            <div id="sgoConfig" class="special-config">
+                <h3>Configuração do SGO</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Número de Beneficiários:</label>
+                        <input type="number" id="sgoBeneficiarios" min="1" value="2500" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Incluir Beneficiário Mobile? (R$ 500,00)</label>
+                        <select id="sgoMobile">
+                            <option value="nao">Não</option>
+                            <option value="sim">Sim</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Incluir Portal Autorizador Online? (R$ 500,00)</label>
+                        <select id="sgoPortal">
+                            <option value="nao">Não</option>
+                            <option value="sim">Sim</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuração Especial para SMS -->
+            <div id="smsConfig" class="special-config">
+                <h3>Configuração de SMS</h3>
+                <div class="form-group">
+                    <label>Selecione o Pacote de SMS:</label>
+                    <select id="smsPacote">
+                        <option value="1000">1.000 SMS - R$ 180,00</option>
+                        <option value="5000">5.000 SMS - R$ 720,00</option>
+                        <option value="10000">10.000 SMS - R$ 1.200,00</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>3. Sua Proposta Comercial</h2>
+            <table class="proposal-table">
+                <thead>
+                    <tr>
+                        <th>Módulo</th>
+                        <th>Valor Mensal (R$)</th>
+                        <th>Valor Implantação (R$)</th>
+                    </tr>
+                </thead>
+                <tbody id="proposalTableBody">
+                    <tr>
+                        <td colspan="3" style="text-align: center; padding: 40px;">Selecione os módulos e gere sua proposta.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="total-section">
+                <div class="total-row">
+                    <span>Valor Total Mensal:</span>
+                    <strong id="totalMensal">R$ 0,00</strong>
+                </div>
+                <div class="total-row">
+                    <span>Valor Total de Implantação (3x):</span>
+                    <strong id="totalImplantacao">R$ 0,00</strong>
+                </div>
+                <div class="total-row" style="font-size: 1.8rem; margin-top: 20px; border-top: 2px solid rgba(255,255,255,0.3); padding-top: 20px;">
+                    <span>Valor Total da Proposta:</span>
+                    <strong id="totalGeral">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <div class="action-buttons no-print">
+                <button class="btn btn-primary" onclick="generateProposal()">
+                    🔄 Atualizar Proposta
+                </button>
+                <button class="btn btn-export" onclick="exportToExcel()">
+                    📊 Exportar para Excel
+                </button>
+                <button class="btn btn-print" onclick="window.print()">
+                    🖨️ Imprimir Proposta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados de precificação baseados na planilha fornecida
+        const pricingData = {
+            "filantropico": {
+                "1 a 50 leitos": {
+                    "Faturamento de AIH": 480.00,
+                    "Faturamento de Ambulatório": 240.00,
+                    "Faturamento de Convênios": 360.00,
+                    "Controle de Estoque": 420.00,
+                    "Recepção Interna": 240.00,
+                    "Recepção Externa": 240.00,
+                    "SADT - Radiologia": 180.00,
+                    "SADT - Laboratório": 420.00,
+                    "SADT - Endoscopia": 180.00,
+                    "SADT - Anatomia Patológica": 120.00,
+                    "SADT - Ultra-Sonografia": 180.00,
+                    "Bloco Cirúrgico": 240.00,
+                    "SADT - Tomografia": 180.00,
+                    "Contabilidade": 420.00,
+                    "Financeiro": 480.00,
+                    "APAC": 240.00,
+                    "Custos": 360.00,
+                    "SADT - Hemodinâmica": 180.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 180.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 180.00,
+                    "Orçamento": 120.00,
+                    "SADT- Ressonância Magnética": 180.00,
+                    "SGHIntelligence": 720.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 180.00,
+                    "Painel Eletrônico*": 180.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 300.00,
+                    "SAC *": 60.00,
+                    "Controle de Acessos": 180.00,
+                    "Higienização de Leitos *": 120.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 120.00,
+                    "Integrador Laboratório Web Service": 120.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 120.00,
+                    "App Checagem Oncológica PEP": 120.00,
+                    "Nota Fiscal Eletrônica": 120.00,
+                    "Portal de Serviços": 180.00,
+                    "Laudo Web": 120.00,
+                    "SGHQuali": 720.00,
+                    "Portal de Compras": 480.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 240.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": 950.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 180.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 180.00
+                },
+                "51 a 100": {
+                    "Faturamento de AIH": 540.00,
+                    "Faturamento de Ambulatório": 360.00,
+                    "Faturamento de Convênios": 540.00,
+                    "Controle de Estoque": 600.00,
+                    "Recepção Interna": 360.00,
+                    "Recepção Externa": 360.00,
+                    "SADT - Radiologia": 240.00,
+                    "SADT - Laboratório": 480.00,
+                    "SADT - Endoscopia": 240.00,
+                    "SADT - Anatomia Patológica": 180.00,
+                    "SADT - Ultra-Sonografia": 240.00,
+                    "Bloco Cirúrgico": 360.00,
+                    "SADT - Tomografia": 240.00,
+                    "Contabilidade": 540.00,
+                    "Financeiro": 600.00,
+                    "APAC": 360.00,
+                    "Custos": 600.00,
+                    "SADT - Hemodinâmica": 240.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 240.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 240.00,
+                    "Orçamento": 180.00,
+                    "SADT- Ressonância Magnética": 240.00,
+                    "SGHIntelligence": 960.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 240.00,
+                    "Painel Eletrônico*": 240.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 360.00,
+                    "SAC *": 120.00,
+                    "Controle de Acessos": 300.00,
+                    "Higienização de Leitos *": 180.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 180.00,
+                    "Integrador Laboratório Web Service": 180.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 180.00,
+                    "App Checagem Oncológica PEP": 180.00,
+                    "Nota Fiscal Eletrônica": 180.00,
+                    "Portal de Serviços": 240.00,
+                    "Laudo Web": 180.00,
+                    "SGHQuali": 960.00,
+                    "Portal de Compras": 660.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 360.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": 1230.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 240.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 240.00
+                },
+                "101 a 200": {
+                    "Faturamento de AIH": 720.00,
+                    "Faturamento de Ambulatório": 480.00,
+                    "Faturamento de Convênios": 720.00,
+                    "Controle de Estoque": 840.00,
+                    "Recepção Interna": 480.00,
+                    "Recepção Externa": 480.00,
+                    "SADT - Radiologia": 300.00,
+                    "SADT - Laboratório": 540.00,
+                    "SADT - Endoscopia": 300.00,
+                    "SADT - Anatomia Patológica": 216.00,
+                    "SADT - Ultra-Sonografia": 300.00,
+                    "Bloco Cirúrgico": 480.00,
+                    "SADT - Tomografia": 300.00,
+                    "Contabilidade": 660.00,
+                    "Financeiro": 720.00,
+                    "APAC": 480.00,
+                    "Custos": 720.00,
+                    "SADT - Hemodinâmica": 300.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 300.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 300.00,
+                    "Orçamento": 240.00,
+                    "SADT- Ressonância Magnética": 300.00,
+                    "SGHIntelligence": 1200.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 300.00,
+                    "Painel Eletrônico*": 360.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 480.00,
+                    "SAC *": 180.00,
+                    "Controle de Acessos": 360.00,
+                    "Higienização de Leitos *": 240.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 240.00,
+                    "Integrador Laboratório Web Service": 240.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 240.00,
+                    "App Checagem Oncológica PEP": 240.00,
+                    "Nota Fiscal Eletrônica": 240.00,
+                    "Portal de Serviços": 360.00,
+                    "Laudo Web": 240.00,
+                    "SGHQuali": 1200.00,
+                    "Portal de Compras": 840.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 480.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 300.00,
+                    "CEMEX": 1650.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 300.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 360.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 300.00
+                },
+                "Acima de 200": {
+                    "Faturamento de AIH": 1080.00,
+                    "Faturamento de Ambulatório": 840.00,
+                    "Faturamento de Convênios": 1200.00,
+                    "Controle de Estoque": 1200.00,
+                    "Recepção Interna": 780.00,
+                    "Recepção Externa": 780.00,
+                    "SADT - Radiologia": 480.00,
+                    "SADT - Laboratório": 600.00,
+                    "SADT - Endoscopia": 480.00,
+                    "SADT - Anatomia Patológica": 480.00,
+                    "SADT - Ultra-Sonografia": 480.00,
+                    "Bloco Cirúrgico": 780.00,
+                    "SADT - Tomografia": 480.00,
+                    "Contabilidade": 900.00,
+                    "Financeiro": 840.00,
+                    "APAC": 840.00,
+                    "Custos": 840.00,
+                    "SADT - Hemodinâmica": 480.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 420.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 480.00,
+                    "Orçamento": 300.00,
+                    "SADT- Ressonância Magnética": 480.00,
+                    "SGHIntelligence": 1800.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 480.00,
+                    "Painel Eletrônico*": 600.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 600.00,
+                    "SAC *": 300.00,
+                    "Controle de Acessos": 420.00,
+                    "Higienização de Leitos *": 360.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 300.00,
+                    "Integrador Laboratório Web Service": 300.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 300.00,
+                    "App Checagem Oncológica PEP": 300.00,
+                    "Nota Fiscal Eletrônica": 300.00,
+                    "Portal de Serviços": 420.00,
+                    "Laudo Web": 300.00,
+                    "SGHQuali": 1800.00,
+                    "Portal de Compras": 960.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 600.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 300.00,
+                    "CEMEX": 2170.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 300.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 600.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 360.00
+                }
+            },
+            "privado": {
+                "1 a 50 leitos": {
+                    "Faturamento de AIH": 0,
+                    "Faturamento de Ambulatório": 0,
+                    "Faturamento de Convênios": 720.00,
+                    "Controle de Estoque": 480.00,
+                    "Recepção Interna": 240.00,
+                    "Recepção Externa": 240.00,
+                    "SADT - Radiologia": 180.00,
+                    "SADT - Laboratório": 420.00,
+                    "SADT - Endoscopia": 180.00,
+                    "SADT - Anatomia Patológica": 180.00,
+                    "SADT - Ultra-Sonografia": 180.00,
+                    "Bloco Cirúrgico": 240.00,
+                    "SADT - Tomografia": 180.00,
+                    "Contabilidade": 420.00,
+                    "Financeiro": 480.00,
+                    "APAC": 0,
+                    "Custos": 360.00,
+                    "SADT - Hemodinâmica": 180.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 180.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 180.00,
+                    "Orçamento": 120.00,
+                    "SADT- Ressonância Magnética": 180.00,
+                    "SGHIntelligence": 720.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 180.00,
+                    "Painel Eletrônico*": 180.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 300.00,
+                    "SAC *": 60.00,
+                    "Controle de Acessos": 180.00,
+                    "Higienização de Leitos *": 120.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 120.00,
+                    "Integrador Laboratório Web Service": 120.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 120.00,
+                    "App Checagem Oncológica PEP": 120.00,
+                    "Nota Fiscal Eletrônica": 180.00,
+                    "Portal de Serviços": 180.00,
+                    "Laudo Web": 120.00,
+                    "SGHQuali": 720.00,
+                    "Portal de Compras": 480.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 180.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": 950.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 180.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 180.00
+                },
+                "51 a 100": {
+                    "Faturamento de AIH": 0,
+                    "Faturamento de Ambulatório": 0,
+                    "Faturamento de Convênios": 960.00,
+                    "Controle de Estoque": 660.00,
+                    "Recepção Interna": 360.00,
+                    "Recepção Externa": 360.00,
+                    "SADT - Radiologia": 276.00,
+                    "SADT - Laboratório": 480.00,
+                    "SADT - Endoscopia": 276.00,
+                    "SADT - Anatomia Patológica": 276.00,
+                    "SADT - Ultra-Sonografia": 276.00,
+                    "Bloco Cirúrgico": 360.00,
+                    "SADT - Tomografia": 276.00,
+                    "Contabilidade": 540.00,
+                    "Financeiro": 600.00,
+                    "APAC": 0,
+                    "Custos": 480.00,
+                    "SADT - Hemodinâmica": 276.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 240.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 276.00,
+                    "Orçamento": 180.00,
+                    "SADT- Ressonância Magnética": 276.00,
+                    "SGHIntelligence": 960.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 276.00,
+                    "Painel Eletrônico*": 240.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 360.00,
+                    "SAC *": 120.00,
+                    "Controle de Acessos": 300.00,
+                    "Higienização de Leitos *": 180.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 180.00,
+                    "Integrador Laboratório Web Service": 180.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 180.00,
+                    "App Checagem Oncológica PEP": 180.00,
+                    "Nota Fiscal Eletrônica": 240.00,
+                    "Portal de Serviços": 240.00,
+                    "Laudo Web": 180.00,
+                    "SGHQuali": 960.00,
+                    "Portal de Compras": 660.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 240.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": 1230.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 240.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 240.00
+                },
+                "101 a 200": {
+                    "Faturamento de AIH": 0,
+                    "Faturamento de Ambulatório": 0,
+                    "Faturamento de Convênios": 1440.00,
+                    "Controle de Estoque": 840.00,
+                    "Recepção Interna": 480.00,
+                    "Recepção Externa": 480.00,
+                    "SADT - Radiologia": 336.00,
+                    "SADT - Laboratório": 540.00,
+                    "SADT - Endoscopia": 336.00,
+                    "SADT - Anatomia Patológica": 336.00,
+                    "SADT - Ultra-Sonografia": 336.00,
+                    "Bloco Cirúrgico": 480.00,
+                    "SADT - Tomografia": 336.00,
+                    "Contabilidade": 660.00,
+                    "Financeiro": 720.00,
+                    "APAC": 0,
+                    "Custos": 600.00,
+                    "SADT - Hemodinâmica": 336.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 300.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 336.00,
+                    "Orçamento": 240.00,
+                    "SADT- Ressonância Magnética": 336.00,
+                    "SGHIntelligence": 1200.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 336.00,
+                    "Painel Eletrônico*": 360.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 480.00,
+                    "SAC *": 180.00,
+                    "Controle de Acessos": 360.00,
+                    "Higienização de Leitos *": 240.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 240.00,
+                    "Integrador Laboratório Web Service": 240.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 240.00,
+                    "App Checagem Oncológica PEP": 240.00,
+                    "Nota Fiscal Eletrônica": 300.00,
+                    "Portal de Serviços": 360.00,
+                    "Laudo Web": 240.00,
+                    "SGHQuali": 1200.00,
+                    "Portal de Compras": 840.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 360.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 300.00,
+                    "CEMEX": 1650.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 300.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 360.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 300.00
+                },
+                "Acima de 200": {
+                    "Faturamento de AIH": 0,
+                    "Faturamento de Ambulatório": 0,
+                    "Faturamento de Convênios": 1920.00,
+                    "Controle de Estoque": 1200.00,
+                    "Recepção Interna": 780.00,
+                    "Recepção Externa": 780.00,
+                    "SADT - Radiologia": 480.00,
+                    "SADT - Laboratório": 600.00,
+                    "SADT - Endoscopia": 480.00,
+                    "SADT - Anatomia Patológica": 480.00,
+                    "SADT - Ultra-Sonografia": 480.00,
+                    "Bloco Cirúrgico": 780.00,
+                    "SADT - Tomografia": 480.00,
+                    "Contabilidade": 900.00,
+                    "Financeiro": 840.00,
+                    "APAC": 0,
+                    "Custos": 840.00,
+                    "SADT - Hemodinâmica": 480.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 420.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 480.00,
+                    "Orçamento": 300.00,
+                    "SADT- Ressonância Magnética": 480.00,
+                    "SGHIntelligence": 1800.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 480.00,
+                    "Painel Eletrônico*": 600.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 600.00,
+                    "SAC *": 300.00,
+                    "Controle de Acessos": 420.00,
+                    "Higienização de Leitos *": 360.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 300.00,
+                    "Integrador Laboratório Web Service": 300.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 300.00,
+                    "App Checagem Oncológica PEP": 300.00,
+                    "Nota Fiscal Eletrônica": 360.00,
+                    "Portal de Serviços": 420.00,
+                    "Laudo Web": 300.00,
+                    "SGHQuali": 1800.00,
+                    "Portal de Compras": 960.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 600.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 300.00,
+                    "CEMEX": 2170.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 300.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 600.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 360.00
+                }
+            },
+            "publico": {
+                "1 a 50 leitos": {
+                    "Faturamento de AIH": 720.00,
+                    "Faturamento de Ambulatório": 480.00,
+                    "Faturamento de Convênios": 0,
+                    "Controle de Estoque": 480.00,
+                    "Recepção Interna": 240.00,
+                    "Recepção Externa": 240.00,
+                    "SADT - Radiologia": 240.00,
+                    "SADT - Laboratório": 480.00,
+                    "SADT - Endoscopia": 240.00,
+                    "SADT - Anatomia Patológica": 240.00,
+                    "SADT - Ultra-Sonografia": 240.00,
+                    "Bloco Cirúrgico": 240.00,
+                    "SADT - Tomografia": 240.00,
+                    "Contabilidade": 420.00,
+                    "Financeiro": 480.00,
+                    "APAC": 480.00,
+                    "Custos": 480.00,
+                    "SADT - Hemodinâmica": 240.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 360.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 240.00,
+                    "Orçamento": 240.00,
+                    "SADT- Ressonância Magnética": 240.00,
+                    "SGHIntelligence": 720.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 240.00,
+                    "Painel Eletrônico*": 240.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 300.00,
+                    "SAC *": 60.00,
+                    "Controle de Acessos": 180.00,
+                    "Higienização de Leitos *": 120.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 180.00,
+                    "Integrador Laboratório Web Service": 180.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 180.00,
+                    "App Checagem Oncológica PEP": 120.00,
+                    "Nota Fiscal Eletrônica": 0,
+                    "Portal de Serviços": 240.00,
+                    "Laudo Web": 120.00,
+                    "SGHQuali": 720.00,
+                    "Portal de Compras": 480.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 180.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": "ñ participa",
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 180.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 180.00
+                },
+                "51 a 100": {
+                    "Faturamento de AIH": 960.00,
+                    "Faturamento de Ambulatório": 720.00,
+                    "Faturamento de Convênios": 0,
+                    "Controle de Estoque": 660.00,
+                    "Recepção Interna": 360.00,
+                    "Recepção Externa": 360.00,
+                    "SADT - Radiologia": 300.00,
+                    "SADT - Laboratório": 540.00,
+                    "SADT - Endoscopia": 300.00,
+                    "SADT - Anatomia Patológica": 300.00,
+                    "SADT - Ultra-Sonografia": 300.00,
+                    "Bloco Cirúrgico": 360.00,
+                    "SADT - Tomografia": 300.00,
+                    "Contabilidade": 540.00,
+                    "Financeiro": 600.00,
+                    "APAC": 720.00,
+                    "Custos": 720.00,
+                    "SADT - Hemodinâmica": 300.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 480.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 300.00,
+                    "Orçamento": 360.00,
+                    "SADT- Ressonância Magnética": 300.00,
+                    "SGHIntelligence": 960.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 300.00,
+                    "Painel Eletrônico*": 300.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 360.00,
+                    "SAC *": 120.00,
+                    "Controle de Acessos": 300.00,
+                    "Higienização de Leitos *": 180.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 240.00,
+                    "Integrador Laboratório Web Service": 240.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 240.00,
+                    "App Checagem Oncológica PEP": 180.00,
+                    "Nota Fiscal Eletrônica": 0,
+                    "Portal de Serviços": 300.00,
+                    "Laudo Web": 180.00,
+                    "SGHQuali": 960.00,
+                    "Portal de Compras": 660.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 240.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": "ñ participa",
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 240.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 240.00
+                },
+                "101 a 200": {
+                    "Faturamento de AIH": 1440.00,
+                    "Faturamento de Ambulatório": 1080.00,
+                    "Faturamento de Convênios": 0,
+                    "Controle de Estoque": 840.00,
+                    "Recepção Interna": 480.00,
+                    "Recepção Externa": 480.00,
+                    "SADT - Radiologia": 360.00,
+                    "SADT - Laboratório": 600.00,
+                    "SADT - Endoscopia": 360.00,
+                    "SADT - Anatomia Patológica": 360.00,
+                    "SADT - Ultra-Sonografia": 360.00,
+                    "Bloco Cirúrgico": 480.00,
+                    "SADT - Tomografia": 360.00,
+                    "Contabilidade": 660.00,
+                    "Financeiro": 720.00,
+                    "APAC": 1080.00,
+                    "Custos": 960.00,
+                    "SADT - Hemodinâmica": 360.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 600.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 360.00,
+                    "Orçamento": 480.00,
+                    "SADT- Ressonância Magnética": 360.00,
+                    "SGHIntelligence": 1200.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 360.00,
+                    "Painel Eletrônico*": 420.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 480.00,
+                    "SAC *": 180.00,
+                    "Controle de Acessos": 360.00,
+                    "Higienização de Leitos *": 240.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 300.00,
+                    "Integrador Laboratório Web Service": 300.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 300.00,
+                    "App Checagem Oncológica PEP": 240.00,
+                    "Nota Fiscal Eletrônica": 0,
+                    "Portal de Serviços": 420.00,
+                    "Laudo Web": 240.00,
+                    "SGHQuali": 1200.00,
+                    "Portal de Compras": 840.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 360.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 300.00,
+                    "CEMEX": "ñ participa",
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 300.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 360.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 300.00
+                },
+                "Acima de 200": {
+                    "Faturamento de AIH": 1920.00,
+                    "Faturamento de Ambulatório": 1440.00,
+                    "Faturamento de Convênios": 0,
+                    "Controle de Estoque": 1200.00,
+                    "Recepção Interna": 780.00,
+                    "Recepção Externa": 780.00,
+                    "SADT - Radiologia": 540.00,
+                    "SADT - Laboratório": 660.00,
+                    "SADT - Endoscopia": 540.00,
+                    "SADT - Anatomia Patológica": 540.00,
+                    "SADT - Ultra-Sonografia": 540.00,
+                    "Bloco Cirúrgico": 780.00,
+                    "SADT - Tomografia": 540.00,
+                    "Contabilidade": 900.00,
+                    "Financeiro": 840.00,
+                    "APAC": 1440.00,
+                    "Custos": 1680.00,
+                    "SADT - Hemodinâmica": 540.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 840.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 540.00,
+                    "Orçamento": 600.00,
+                    "SADT- Ressonância Magnética": 540.00,
+                    "SGHIntelligence": 1800.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 540.00,
+                    "Painel Eletrônico*": 660.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 600.00,
+                    "SAC *": 300.00,
+                    "Controle de Acessos": 420.00,
+                    "Higienização de Leitos *": 360.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 360.00,
+                    "Integrador Laboratório Web Service": 360.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 360.00,
+                    "App Checagem Oncológica PEP": 300.00,
+                    "Nota Fiscal Eletrônica": 0,
+                    "Portal de Serviços": 480.00,
+                    "Laudo Web": 300.00,
+                    "SGHQuali": 1800.00,
+                    "Portal de Compras": 960.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 600.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 480.00,
+                    "CEMEX": "ñ participa",
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 480.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 600.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 360.00
+                }
+            },
+            "demais": {
+                "HOP DIA": {
+                    "Faturamento de AIH": 0,
+                    "Faturamento de Ambulatório": 240.00,
+                    "Faturamento de Convênios": 720.00,
+                    "Controle de Estoque": 480.00,
+                    "Recepção Interna": 360.00,
+                    "Recepção Externa": 240.00,
+                    "SADT - Radiologia": 180.00,
+                    "SADT - Laboratório": 420.00,
+                    "SADT - Endoscopia": 240.00,
+                    "SADT - Anatomia Patológica": 240.00,
+                    "SADT - Ultra-Sonografia": 240.00,
+                    "Bloco Cirúrgico": 240.00,
+                    "SADT - Tomografia": 240.00,
+                    "Contabilidade": 420.00,
+                    "Financeiro": 480.00,
+                    "APAC": 360.00,
+                    "Custos": 360.00,
+                    "SADT - Hemodinâmica": 240.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 180.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 240.00,
+                    "Orçamento": 180.00,
+                    "SADT- Ressonância Magnética": 240.00,
+                    "SGHIntelligence": 720.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 240.00,
+                    "Painel Eletrônico*": 180.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 300.00,
+                    "SAC *": 0,
+                    "Controle de Acessos": 180.00,
+                    "Higienização de Leitos *": 120.00,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 120.00,
+                    "Integrador Laboratório Web Service": 120.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 120.00,
+                    "App Checagem Oncológica PEP": 120.00,
+                    "Nota Fiscal Eletrônica": 180.00,
+                    "Portal de Serviços": 180.00,
+                    "Laudo Web": 120.00,
+                    "SGHQuali": 720.00,
+                    "Portal de Compras": 480.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 180.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": 950.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 180.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 0
+                },
+                "CLINICAS I": {
+                    "Faturamento de AIH": 0,
+                    "Faturamento de Ambulatório": 0,
+                    "Faturamento de Convênios": 360.00,
+                    "Controle de Estoque": 240.00,
+                    "Recepção Interna": 0,
+                    "Recepção Externa": 240.00,
+                    "SADT - Radiologia": 180.00,
+                    "SADT - Laboratório": 420.00,
+                    "SADT - Endoscopia": 240.00,
+                    "SADT - Anatomia Patológica": 240.00,
+                    "SADT - Ultra-Sonografia": 240.00,
+                    "Bloco Cirúrgico": 240.00,
+                    "SADT - Tomografia": 240.00,
+                    "Contabilidade": 300.00,
+                    "Financeiro": 360.00,
+                    "APAC": 0,
+                    "Custos": 420.00,
+                    "SADT - Hemodinâmica": 240.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 180.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 240.00,
+                    "Orçamento": 120.00,
+                    "SADT- Ressonância Magnética": 240.00,
+                    "SGHIntelligence": 720.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 240.00,
+                    "Painel Eletrônico*": 180.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 300.00,
+                    "SAC *": 0,
+                    "Controle de Acessos": 180.00,
+                    "Higienização de Leitos *": 0,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 120.00,
+                    "Integrador Laboratório Web Service": 120.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 120.00,
+                    "App Checagem Oncológica PEP": 120.00,
+                    "Nota Fiscal Eletrônica": 180.00,
+                    "Portal de Serviços": 180.00,
+                    "Laudo Web": 120.00,
+                    "SGHQuali": 720.00,
+                    "Portal de Compras": 660.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 300.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": 950.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 180.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 0
+                },
+                "CLINICAS II": {
+                    "Faturamento de AIH": 0,
+                    "Faturamento de Ambulatório": 0,
+                    "Faturamento de Convênios": 600.00,
+                    "Controle de Estoque": 360.00,
+                    "Recepção Interna": 0,
+                    "Recepção Externa": 360.00,
+                    "SADT - Radiologia": 300.00,
+                    "SADT - Laboratório": 480.00,
+                    "SADT - Endoscopia": 360.00,
+                    "SADT - Anatomia Patológica": 360.00,
+                    "SADT - Ultra-Sonografia": 360.00,
+                    "Bloco Cirúrgico": 360.00,
+                    "SADT - Tomografia": 360.00,
+                    "Contabilidade": 360.00,
+                    "Financeiro": 360.00,
+                    "APAC": 0,
+                    "Custos": 480.00,
+                    "SADT - Hemodinâmica": 360.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 240.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 360.00,
+                    "Orçamento": 180.00,
+                    "SADT- Ressonância Magnética": 360.00,
+                    "SGHIntelligence": 960.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 360.00,
+                    "Painel Eletrônico*": 240.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 300.00,
+                    "SAC *": 0,
+                    "Controle de Acessos": 300.00,
+                    "Higienização de Leitos *": 0,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 180.00,
+                    "Integrador Laboratório Web Service": 180.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 180.00,
+                    "App Checagem Oncológica PEP": 180.00,
+                    "Nota Fiscal Eletrônica": 240.00,
+                    "Portal de Serviços": 240.00,
+                    "Laudo Web": 180.00,
+                    "SGHQuali": 960.00,
+                    "Portal de Compras": 816.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 300.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": 1230.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 240.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 0
+                },
+                "CLINICAS III": {
+                    "Faturamento de AIH": 0,
+                    "Faturamento de Ambulatório": 0,
+                    "Faturamento de Convênios": 960.00,
+                    "Controle de Estoque": 480.00,
+                    "Recepção Interna": 0,
+                    "Recepção Externa": 480.00,
+                    "SADT - Radiologia": 360.00,
+                    "SADT - Laboratório": 540.00,
+                    "SADT - Endoscopia": 480.00,
+                    "SADT - Anatomia Patológica": 480.00,
+                    "SADT - Ultra-Sonografia": 480.00,
+                    "Bloco Cirúrgico": 480.00,
+                    "SADT - Tomografia": 480.00,
+                    "Contabilidade": 420.00,
+                    "Financeiro": 360.00,
+                    "APAC": 0,
+                    "Custos": 840.00,
+                    "SADT - Hemodinâmica": 480.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 300.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 480.00,
+                    "Orçamento": 240.00,
+                    "SADT- Ressonância Magnética": 480.00,
+                    "SGHIntelligence": 1200.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 480.00,
+                    "Painel Eletrônico*": 360.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 300.00,
+                    "SAC *": 0,
+                    "Controle de Acessos": 360.00,
+                    "Higienização de Leitos *": 0,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 240.00,
+                    "Integrador Laboratório Web Service": 240.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 240.00,
+                    "App Checagem Oncológica PEP": 240.00,
+                    "Nota Fiscal Eletrônica": 300.00,
+                    "Portal de Serviços": 360.00,
+                    "Laudo Web": 240.00,
+                    "SGHQuali": 1200.00,
+                    "Portal de Compras": 960.00,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 300.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": 1650.00,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 360.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 0
+                },
+                "UPA I": {
+                    "Faturamento de AIH": 0,
+                    "Faturamento de Ambulatório": 480.00,
+                    "Faturamento de Convênios": 0,
+                    "Controle de Estoque": 360.00,
+                    "Recepção Interna": 0,
+                    "Recepção Externa": 240.00,
+                    "SADT - Radiologia": 180.00,
+                    "SADT - Laboratório": 420.00,
+                    "SADT - Endoscopia": 240.00,
+                    "SADT - Anatomia Patológica": 240.00,
+                    "SADT - Ultra-Sonografia": 240.00,
+                    "Bloco Cirúrgico": 240.00,
+                    "SADT - Tomografia": 240.00,
+                    "Contabilidade": 0,
+                    "Financeiro": 360.00,
+                    "APAC": 0,
+                    "Custos": 420.00,
+                    "SADT - Hemodinâmica": 240.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 180.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 240.00,
+                    "Orçamento": 120.00,
+                    "SADT- Ressonância Magnética": 240.00,
+                    "SGHIntelligence": 720.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 240.00,
+                    "Painel Eletrônico*": 180.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 0,
+                    "SAC *": 0,
+                    "Controle de Acessos": 180.00,
+                    "Higienização de Leitos *": 0,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 120.00,
+                    "Integrador Laboratório Web Service": 120.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 120.00,
+                    "App Checagem Oncológica PEP": 120.00,
+                    "Nota Fiscal Eletrônica": 0,
+                    "Portal de Serviços": 180.00,
+                    "Laudo Web": 120.00,
+                    "SGHQuali": 720.00,
+                    "Portal de Compras": 0,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 300.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": 0,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 180.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 0
+                },
+                "UPAII": {
+                    "Faturamento de AIH": 0,
+                    "Faturamento de Ambulatório": 600.00,
+                    "Faturamento de Convênios": 0,
+                    "Controle de Estoque": 540.00,
+                    "Recepção Interna": 0,
+                    "Recepção Externa": 360.00,
+                    "SADT - Radiologia": 300.00,
+                    "SADT - Laboratório": 480.00,
+                    "SADT - Endoscopia": 360.00,
+                    "SADT - Anatomia Patológica": 360.00,
+                    "SADT - Ultra-Sonografia": 360.00,
+                    "Bloco Cirúrgico": 360.00,
+                    "SADT - Tomografia": 360.00,
+                    "Contabilidade": 0,
+                    "Financeiro": 480.00,
+                    "APAC": 0,
+                    "Custos": 480.00,
+                    "SADT - Hemodinâmica": 360.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 240.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 360.00,
+                    "Orçamento": 180.00,
+                    "SADT- Ressonância Magnética": 360.00,
+                    "SGHIntelligence": 960.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 360.00,
+                    "Painel Eletrônico*": 240.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 0,
+                    "SAC *": 0,
+                    "Controle de Acessos": 300.00,
+                    "Higienização de Leitos *": 0,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 180.00,
+                    "Integrador Laboratório Web Service": 180.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 180.00,
+                    "App Checagem Oncológica PEP": 180.00,
+                    "Nota Fiscal Eletrônica": 0,
+                    "Portal de Serviços": 240.00,
+                    "Laudo Web": 180.00,
+                    "SGHQuali": 960.00,
+                    "Portal de Compras": 0,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 300.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": 0,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 240.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 0
+                },
+                "UPA III": {
+                    "Faturamento de AIH": 0,
+                    "Faturamento de Ambulatório": 840.00,
+                    "Faturamento de Convênios": 0,
+                    "Controle de Estoque": 720.00,
+                    "Recepção Interna": 0,
+                    "Recepção Externa": 480.00,
+                    "SADT - Radiologia": 360.00,
+                    "SADT - Laboratório": 540.00,
+                    "SADT - Endoscopia": 480.00,
+                    "SADT - Anatomia Patológica": 480.00,
+                    "SADT - Ultra-Sonografia": 480.00,
+                    "Bloco Cirúrgico": 480.00,
+                    "SADT - Tomografia": 480.00,
+                    "Contabilidade": 0,
+                    "Financeiro": 600.00,
+                    "APAC": 0,
+                    "Custos": 840.00,
+                    "SADT - Hemodinâmica": 480.00,
+                    "Folha de Pagamento": 1600.00,
+                    "Patrimônio": 300.00,
+                    "SIG - Sistema de Informações Gerenciais": 0,
+                    "SADT- Outros": 480.00,
+                    "Orçamento": 240.00,
+                    "SADT- Ressonância Magnética": 480.00,
+                    "SGHIntelligence": 1200.00,
+                    "Agendamento (normal)": 180.00,
+                    "Agendamento de Quimmioterapia": 240.00,
+                    "Agendamento de Plantão": 180.00,
+                    "SADT- Hemoterapia": 480.00,
+                    "Painel Eletrônico*": 360.00,
+                    "PACs (apenas Worklist)": 180.00,
+                    "SPED": 120.00,
+                    "Gestão de Repasse e Terceiros": 0,
+                    "SAC *": 0,
+                    "Controle de Acessos": 360.00,
+                    "Higienização de Leitos *": 0,
+                    "DMED": 120.00,
+                    "Web Service DICOM": 240.00,
+                    "Integrador Laboratório Web Service": 240.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 240.00,
+                    "App Checagem Oncológica PEP": 240.00,
+                    "Nota Fiscal Eletrônica": 0,
+                    "Portal de Serviços": 360.00,
+                    "Laudo Web": 240.00,
+                    "SGHQuali": 1200.00,
+                    "Portal de Compras": 0,
+                    "Chamada Digital": 180.00,
+                    "EFD REINF": 360.00,
+                    "SPD STORAGE": 0,
+                    "E-Social": 0,
+                    "Aplicação Web Custos": 240.00,
+                    "CEMEX": 0,
+                    "Interação API (Laudos)": 180.00,
+                    "SGH Intelligence Web": 0,
+                    "SGH Intelligence Custos": 240.00,
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 360.00,
+                    "Gerador de Relatorios": 0,
+                    "Central de reservas de Leitos": 0
+                }
+            },
+            "special": {
+                "Agendamento Online": {
+                    "pacientes": {
+                        "1000": 320.00,
+                        "5000": 450.00,
+                        "mais": 615.00
+                    },
+                    "callcenter": {
+                        "1000": 415.00,
+                        "5000": 530.00,
+                        "10000": 700.00,
+                        "15000": 830.00,
+                        "mais": 950.00
+                    }
+                },
+                "CARTÃO DE DESCONTO": {
+                    "5000": 720.00,
+                    "7500": 1080.00,
+                    "10000": 1440.00,
+                    "mais": 1800.00
+                },
+                "SGO": {
+                    "valorPorVida": 1.20,
+                    "minimo": 3000.00,
+                    "mobile": 500.00,
+                    "portal": 500.00
+                },
+                "SMS": {
+                    "1000": 180.00,
+                    "5000": 720.00,
+                    "10000": 1200.00
+                }
+            }
+        };
+
+        // Lista de todos os módulos
+        const allModules = [
+            "Faturamento de AIH",
+            "Faturamento de Ambulatório",
+            "Faturamento de Convênios",
+            "Controle de Estoque",
+            "Recepção Interna",
+            "Recepção Externa",
+            "SADT - Radiologia",
+            "SADT - Laboratório",
+            "SADT - Endoscopia",
+            "SADT - Anatomia Patológica",
+            "SADT - Ultra-Sonografia",
+            "Bloco Cirúrgico",
+            "SADT - Tomografia",
+            "Contabilidade",
+            "Financeiro",
+            "APAC",
+            "Custos",
+            "SADT - Hemodinâmica",
+            "Folha de Pagamento",
+            "Patrimônio",
+            "SIG - Sistema de Informações Gerenciais",
+            "SADT- Outros",
+            "Orçamento",
+            "SADT- Ressonância Magnética",
+            "SGHIntelligence",
+            "Agendamento (normal)",
+            "Agendamento de Quimmioterapia",
+            "Agendamento de Plantão",
+            "SADT- Hemoterapia",
+            "Painel Eletrônico*",
+            "PACs (apenas Worklist)",
+            "SPED",
+            "Gestão de Repasse e Terceiros",
+            "SAC *",
+            "Controle de Acessos",
+            "Higienização de Leitos *",
+            "DMED",
+            "Web Service DICOM",
+            "Integrador Laboratório Web Service",
+            "Integrador Laboratório WebService Padrão SPDATA",
+            "App Checagem Oncológica PEP",
+            "Nota Fiscal Eletrônica",
+            "Portal de Serviços",
+            "Laudo Web",
+            "SGHQuali",
+            "Portal de Compras",
+            "Chamada Digital",
+            "EFD REINF",
+            "SPD STORAGE",
+            "E-Social",
+            "Aplicação Web Custos",
+            "CEMEX",
+            "Interação API (Laudos)",
+            "SGH Intelligence Web",
+            "SGH Intelligence Custos",
+            "Painel Estatístico_Gestão a Vista (Web/CS)",
+            "Gerador de Relatorios",
+            "Central de reservas de Leitos",
+            "Agendamento Online", // Especial
+            "CARTÃO DE DESCONTO", // Especial
+            "SGO",                // Especial
+            "SMS"                 // Especial
+        ];
+
+        // Inicializa os eventos
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('establishment').addEventListener('change', updateBedRangeOptions);
+            loadModules();
+        });
+
+        function updateBedRangeOptions() {
+            const establishment = document.getElementById('establishment').value;
+            const bedRangeSelect = document.getElementById('bedRange');
+            bedRangeSelect.innerHTML = '<option value="">Selecione...</option>';
+
+            if (establishment === 'demais') {
+                const options = ["HOP DIA", "CLINICAS I", "CLINICAS II", "CLINICAS III", "UPA I", "UPAII", "UPA III"];
+                options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    bedRangeSelect.appendChild(option);
+                });
+            } else {
+                const options = ["1 a 50 leitos", "51 a 100", "101 a 200", "Acima de 200"];
+                options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    bedRangeSelect.appendChild(option);
+                });
+            }
+        }
+
+        function loadModules() {
+            const modulesList = document.getElementById('modulesList');
+            modulesList.innerHTML = '';
+
+            allModules.forEach(moduleName => {
+                const div = document.createElement('div');
+                div.className = 'module-item';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                checkbox.value = moduleName;
+                checkbox.dataset.module = moduleName;
+
+                const label = document.createElement('label');
+                label.htmlFor = checkbox.id;
+                label.textContent = moduleName;
+
+                div.appendChild(checkbox);
+                div.appendChild(label);
+                modulesList.appendChild(div);
+
+                // Mostrar configuração especial quando o checkbox for marcado
+                checkbox.addEventListener('change', function() {
+                    const configs = {
+                        "Agendamento Online": "agendamentoConfig",
+                        "CARTÃO DE DESCONTO": "cartaoConfig",
+                        "SGO": "sgoConfig",
+                        "SMS": "smsConfig"
+                    };
+
+                    const configId = configs[moduleName];
+                    if (configId) {
+                        document.getElementById(configId).style.display = this.checked ? 'block' : 'none';
+                    }
+                });
+            });
+        }
+
+        function getSpecialModuleValue(moduleName) {
+            switch(moduleName) {
+                case "Agendamento Online":
+                    const type = document.getElementById('agendamentoType').value;
+                    const qty = parseInt(document.getElementById('agendamentoQty').value);
+                    const ranges = pricingData.special[moduleName][type];
+
+                    if (type === 'pacientes') {
+                        if (qty <= 1000) return ranges["1000"];
+                        else if (qty <= 5000) return ranges["5000"];
+                        else return ranges["mais"];
+                    } else { // callcenter
+                        if (qty <= 1000) return ranges["1000"];
+                        else if (qty <= 5000) return ranges["5000"];
+                        else if (qty <= 10000) return ranges["10000"];
+                        else if (qty <= 15000) return ranges["15000"];
+                        else return ranges["mais"];
+                    }
+
+                case "CARTÃO DE DESCONTO":
+                    const vidas = parseInt(document.getElementById('cartaoVidas').value);
+                    const cartaoRanges = pricingData.special[moduleName];
+
+                    if (vidas <= 5000) return cartaoRanges["5000"];
+                    else if (vidas <= 7500) return cartaoRanges["7500"];
+                    else if (vidas <= 10000) return cartaoRanges["10000"];
+                    else return cartaoRanges["mais"];
+
+                case "SGO":
+                    const beneficiarios = parseInt(document.getElementById('sgoBeneficiarios').value);
+                    const sgoData = pricingData.special.SGO;
+                    const mobile = document.getElementById('sgoMobile').value === 'sim' ? sgoData.mobile : 0;
+                    const portal = document.getElementById('sgoPortal').value === 'sim' ? sgoData.portal : 0;
+
+                    let valorBase = beneficiarios * sgoData.valorPorVida;
+                    if (valorBase < sgoData.minimo) {
+                        valorBase = sgoData.minimo;
+                    }
+                    return valorBase + mobile + portal;
+
+                case "SMS":
+                    const pacote = document.getElementById('smsPacote').value;
+                    return pricingData.special.SMS[pacote];
+
+                default:
+                    return 0;
+            }
+        }
+
+        function generateProposal() {
+            const establishment = document.getElementById('establishment').value;
+            const bedRange = document.getElementById('bedRange').value;
+
+            if (!establishment || !bedRange) {
+                alert("⚠️ Por favor, selecione o tipo de estabelecimento e a faixa.");
+                return;
+            }
+
+            const tableBody = document.getElementById('proposalTableBody');
+            tableBody.innerHTML = '';
+
+            let totalMensal = 0;
+
+            allModules.forEach(moduleName => {
+                const checkbox = document.getElementById(`module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`);
+                if (checkbox && checkbox.checked) {
+                    let valorMensal = 0;
+
+                    // Verifica se é módulo especial
+                    if (["Agendamento Online", "CARTÃO DE DESCONTO", "SGO", "SMS"].includes(moduleName)) {
+                        valorMensal = getSpecialModuleValue(moduleName);
+                    } else {
+                        // Busca valor normal
+                        if (pricingData[establishment] && pricingData[establishment][bedRange]) {
+                            valorMensal = pricingData[establishment][bedRange][moduleName] || 0;
+                            // Trata casos como "ñ participa"
+                            if (typeof valorMensal === 'string') {
+                                valorMensal = 0;
+                            }
+                        }
+                    }
+
+                    if (valorMensal > 0) {
+                        const valorImplantacao = valorMensal * 3; // 3x o valor mensal
+                        totalMensal += valorMensal;
+
+                        const row = document.createElement('tr');
+
+                        const nameCell = document.createElement('td');
+                        nameCell.textContent = moduleName;
+                        row.appendChild(nameCell);
+
+                        const mensalCell = document.createElement('td');
+                        mensalCell.textContent = `R$ ${valorMensal.toFixed(2).replace('.', ',')}`;
+                        mensalCell.className = 'editable';
+                        mensalCell.dataset.type = 'mensal';
+                        mensalCell.addEventListener('click', makeEditable);
+                        row.appendChild(mensalCell);
+
+                        const implantacaoCell = document.createElement('td');
+                        implantacaoCell.textContent = `R$ ${valorImplantacao.toFixed(2).replace('.', ',')}`;
+                        implantacaoCell.className = 'editable';
+                        implantacaoCell.dataset.type = 'implantacao';
+                        implantacaoCell.addEventListener('click', makeEditable);
+                        row.appendChild(implantacaoCell);
+
+                        tableBody.appendChild(row);
+                    }
+                }
+            });
+
+            if (tableBody.children.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px;">Nenhum módulo selecionado.</td></tr>';
+                document.getElementById('totalMensal').textContent = 'R$ 0,00';
+                document.getElementById('totalImplantacao').textContent = 'R$ 0,00';
+                document.getElementById('totalGeral').textContent = 'R$ 0,00';
+                return;
+            }
+
+            const totalImplantacao = totalMensal * 3;
+            const totalGeral = totalMensal + totalImplantacao;
+
+            document.getElementById('totalMensal').textContent = `R$ ${totalMensal.toFixed(2).replace('.', ',')}`;
+            document.getElementById('totalImplantacao').textContent = `R$ ${totalImplantacao.toFixed(2).replace('.', ',')}`;
+            document.getElementById('totalGeral').textContent = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
+        }
+
+        function makeEditable(event) {
+            const cell = event.target;
+            const currentValue = parseFloat(cell.textContent.replace('R$ ', '').replace(',', '.'));
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.step = '0.01';
+            input.value = currentValue;
+            input.style.width = '100%';
+            input.style.padding = '8px';
+            input.style.border = '2px solid #3498db';
+            input.style.borderRadius = '4px';
+            input.style.fontSize = '1rem';
+
+            input.addEventListener('blur', function() {
+                const newValue = parseFloat(this.value) || 0;
+                cell.textContent = `R$ ${newValue.toFixed(2).replace('.', ',')}`;
+                this.remove();
+                recalculateTotals();
+            });
+
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    input.blur();
+                }
+            });
+
+            cell.textContent = '';
+            cell.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
+        function recalculateTotals() {
+            let totalMensal = 0;
+            let totalImplantacao = 0;
+
+            document.querySelectorAll('#proposalTableBody tr').forEach(row => {
+                const mensalCell = row.cells[1];
+                const implantacaoCell = row.cells[2];
+
+                if (mensalCell && implantacaoCell) {
+                    const mensalValue = parseFloat(mensalCell.textContent.replace('R$ ', '').replace(',', '.')) || 0;
+                    const implantacaoValue = parseFloat(implantacaoCell.textContent.replace('R$ ', '').replace(',', '.')) || 0;
+
+                    totalMensal += mensalValue;
+                    totalImplantacao += implantacaoValue;
+                }
+            });
+
+            const totalGeral = totalMensal + totalImplantacao;
+
+            document.getElementById('totalMensal').textContent = `R$ ${totalMensal.toFixed(2).replace('.', ',')}`;
+            document.getElementById('totalImplantacao').textContent = `R$ ${totalImplantacao.toFixed(2).replace('.', ',')}`;
+            document.getElementById('totalGeral').textContent = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
+        }
+
+        function exportToExcel() {
+            const table = document.querySelector('.proposal-table');
+            const wb = XLSX.utils.table_to_book(table, { sheet: "Proposta Spdata" });
+
+            // Adiciona os totais como uma nova linha no final
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const lastRow = XLSX.utils.decode_range(ws['!ref']).e.r + 2;
+
+            ws[`A${lastRow}`] = { v: "TOTAL MENSAL", t: 's' };
+            ws[`B${lastRow}`] = { v: parseFloat(document.getElementById('totalMensal').textContent.replace('R$ ', '').replace(',', '.')), t: 'n' };
+            ws[`B${lastRow}`].z = '#,##0.00';
+
+            ws[`A${lastRow + 1}`] = { v: "TOTAL IMPLANTAÇÃO", t: 's' };
+            ws[`B${lastRow + 1}`] = { v: parseFloat(document.getElementById('totalImplantacao').textContent.replace('R$ ', '').replace(',', '.')), t: 'n' };
+            ws[`B${lastRow + 1}`].z = '#,##0.00';
+
+            ws[`A${lastRow + 2}`] = { v: "TOTAL GERAL", t: 's' };
+            ws[`B${lastRow + 2}`] = { v: parseFloat(document.getElementById('totalGeral').textContent.replace('R$ ', '').replace(',', '.')), t: 'n' };
+            ws[`B${lastRow + 2}`].z = '#,##0.00';
+
+            // Ajusta o tamanho das colunas
+            const colWidths = [
+                { wch: 40 }, // Módulo
+                { wch: 20 }, // Valor Mensal
+                { wch: 20 }  // Valor Implantação
+            ];
+            ws['!cols'] = colWidths;
+
+            XLSX.writeFile(wb, 'proposta_spdata.xlsx');
+        }
+    </script>
+</body>
+</html>
