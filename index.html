@@ -338,6 +338,16 @@
             color: #856404;
         }
 
+        .sgh-notice {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+            margin: 20px 0;
+            font-weight: 500;
+            color: #0d47a1;
+        }
+
         .history-item {
             background: #f8f9fa;
             padding: 20px;
@@ -665,6 +675,14 @@
                 ⚠️ <strong>Esta proposta tem validade de 30 dias</strong> a partir da data de emissão.
             </div>
 
+            <!-- Observação Especial para SGH ESSENCIAL -->
+            <div id="sghEssencialNotice" class="sgh-notice" style="display: none;">
+                💡 <strong>Pacote SGH ESSENCIAL</strong><br>
+                - Valor fixo mensal: <strong>R$5.800,00</strong> (inclui mensalidade e taxa de implantação).<br>
+                - Contrato de 36 meses com redução de 25% após este período.<br>
+                - <strong>Despesas durante implantação (como deslocamento, hospedagem, alimentação) são de responsabilidade do cliente.</strong>
+            </div>
+
             <table class="proposal-table">
                 <thead>
                     <tr>
@@ -768,7 +786,7 @@
                     "Web Service DICOM": 120.00,
                     "Integrador Laboratório Web Service": 120.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 120.00,
-                    "App Checagem Oncológica PEP": 120.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 120.00,
                     "Nota Fiscal Eletrônica": 120.00,
                     "Portal de Serviços": 180.00,
                     "Laudo Web": 120.00,
@@ -828,7 +846,7 @@
                     "Web Service DICOM": 180.00,
                     "Integrador Laboratório Web Service": 180.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 180.00,
-                    "App Checagem Oncológica PEP": 180.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 180.00,
                     "Nota Fiscal Eletrônica": 180.00,
                     "Portal de Serviços": 240.00,
                     "Laudo Web": 180.00,
@@ -888,7 +906,7 @@
                     "Web Service DICOM": 240.00,
                     "Integrador Laboratório Web Service": 240.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 240.00,
-                    "App Checagem Oncológica PEP": 240.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 240.00,
                     "Nota Fiscal Eletrônica": 240.00,
                     "Portal de Serviços": 360.00,
                     "Laudo Web": 240.00,
@@ -948,7 +966,7 @@
                     "Web Service DICOM": 300.00,
                     "Integrador Laboratório Web Service": 300.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 300.00,
-                    "App Checagem Oncológica PEP": 300.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 300.00,
                     "Nota Fiscal Eletrônica": 300.00,
                     "Portal de Serviços": 420.00,
                     "Laudo Web": 300.00,
@@ -1010,7 +1028,7 @@
                     "Web Service DICOM": 120.00,
                     "Integrador Laboratório Web Service": 120.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 120.00,
-                    "App Checagem Oncológica PEP": 120.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 120.00,
                     "Nota Fiscal Eletrônica": 180.00,
                     "Portal de Serviços": 180.00,
                     "Laudo Web": 120.00,
@@ -1070,7 +1088,7 @@
                     "Web Service DICOM": 180.00,
                     "Integrador Laboratório Web Service": 180.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 180.00,
-                    "App Checagem Oncológica PEP": 180.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 180.00,
                     "Nota Fiscal Eletrônica": 240.00,
                     "Portal de Serviços": 240.00,
                     "Laudo Web": 180.00,
@@ -1130,7 +1148,7 @@
                     "Web Service DICOM": 240.00,
                     "Integrador Laboratório Web Service": 240.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 240.00,
-                    "App Checagem Oncológica PEP": 240.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 240.00,
                     "Nota Fiscal Eletrônica": 300.00,
                     "Portal de Serviços": 360.00,
                     "Laudo Web": 240.00,
@@ -1190,7 +1208,7 @@
                     "Web Service DICOM": 300.00,
                     "Integrador Laboratório Web Service": 300.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 300.00,
-                    "App Checagem Oncológica PEP": 300.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 300.00,
                     "Nota Fiscal Eletrônica": 360.00,
                     "Portal de Serviços": 420.00,
                     "Laudo Web": 300.00,
@@ -1252,7 +1270,7 @@
                     "Web Service DICOM": 180.00,
                     "Integrador Laboratório Web Service": 180.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 180.00,
-                    "App Checagem Oncológica PEP": 120.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 120.00,
                     "Nota Fiscal Eletrônica": 0,
                     "Portal de Serviços": 240.00,
                     "Laudo Web": 120.00,
@@ -1312,7 +1330,7 @@
                     "Web Service DICOM": 240.00,
                     "Integrador Laboratório Web Service": 240.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 240.00,
-                    "App Checagem Oncológica PEP": 180.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 180.00,
                     "Nota Fiscal Eletrônica": 0,
                     "Portal de Serviços": 300.00,
                     "Laudo Web": 180.00,
@@ -1372,7 +1390,7 @@
                     "Web Service DICOM": 300.00,
                     "Integrador Laboratório Web Service": 300.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 300.00,
-                    "App Checagem Oncológica PEP": 240.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 240.00,
                     "Nota Fiscal Eletrônica": 0,
                     "Portal de Serviços": 420.00,
                     "Laudo Web": 240.00,
@@ -1432,7 +1450,7 @@
                     "Web Service DICOM": 360.00,
                     "Integrador Laboratório Web Service": 360.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 360.00,
-                    "App Checagem Oncológica PEP": 300.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 300.00,
                     "Nota Fiscal Eletrônica": 0,
                     "Portal de Serviços": 480.00,
                     "Laudo Web": 300.00,
@@ -1494,7 +1512,7 @@
                     "Web Service DICOM": 120.00,
                     "Integrador Laboratório Web Service": 120.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 120.00,
-                    "App Checagem Oncológica PEP": 120.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 120.00,
                     "Nota Fiscal Eletrônica": 180.00,
                     "Portal de Serviços": 180.00,
                     "Laudo Web": 120.00,
@@ -1554,7 +1572,7 @@
                     "Web Service DICOM": 120.00,
                     "Integrador Laboratório Web Service": 120.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 120.00,
-                    "App Checagem Oncológica PEP": 120.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 120.00,
                     "Nota Fiscal Eletrônica": 180.00,
                     "Portal de Serviços": 180.00,
                     "Laudo Web": 120.00,
@@ -1614,7 +1632,7 @@
                     "Web Service DICOM": 180.00,
                     "Integrador Laboratório Web Service": 180.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 180.00,
-                    "App Checagem Oncológica PEP": 180.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 180.00,
                     "Nota Fiscal Eletrônica": 240.00,
                     "Portal de Serviços": 240.00,
                     "Laudo Web": 180.00,
@@ -1674,7 +1692,7 @@
                     "Web Service DICOM": 240.00,
                     "Integrador Laboratório Web Service": 240.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 240.00,
-                    "App Checagem Oncológica PEP": 240.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 240.00,
                     "Nota Fiscal Eletrônica": 300.00,
                     "Portal de Serviços": 360.00,
                     "Laudo Web": 240.00,
@@ -1734,7 +1752,7 @@
                     "Web Service DICOM": 120.00,
                     "Integrador Laboratório Web Service": 120.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 120.00,
-                    "App Checagem Oncológica PEP": 120.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 120.00,
                     "Nota Fiscal Eletrônica": 0,
                     "Portal de Serviços": 180.00,
                     "Laudo Web": 120.00,
@@ -1794,7 +1812,7 @@
                     "Web Service DICOM": 180.00,
                     "Integrador Laboratório Web Service": 180.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 180.00,
-                    "App Checagem Oncológica PEP": 180.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 180.00,
                     "Nota Fiscal Eletrônica": 0,
                     "Portal de Serviços": 240.00,
                     "Laudo Web": 180.00,
@@ -1854,7 +1872,7 @@
                     "Web Service DICOM": 240.00,
                     "Integrador Laboratório Web Service": 240.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 240.00,
-                    "App Checagem Oncológica PEP": 240.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 240.00,
                     "Nota Fiscal Eletrônica": 0,
                     "Portal de Serviços": 360.00,
                     "Laudo Web": 240.00,
@@ -1947,7 +1965,7 @@
                     "Web Service DICOM": 1200.00,
                     "Integrador Laboratório Web Service": 1200.00,
                     "Integrador Laboratório WebService Padrão SPDATA": 1200.00,
-                    "App Checagem Oncológica PEP": 1200.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 1200.00,
                     "Nota Fiscal Eletrônica": 1800.00,
                     "Portal de Serviços": 1800.00,
                     "Laudo Web": 1200.00,
@@ -2015,7 +2033,7 @@
             "Web Service DICOM",
             "Integrador Laboratório Web Service",
             "Integrador Laboratório WebService Padrão SPDATA",
-            "App Checagem Oncológica PEP",
+            "PEP - Prontuário Eletrônico do Paciente",
             "Nota Fiscal Eletrônica",
             "Portal de Serviços",
             "Laudo Web",
@@ -2039,7 +2057,7 @@
             "SMS"
         ];
 
-        // Módulos do pacote SGH ESSENCIAL
+        // Módulos do pacote SGH ESSENCIAL (atualizado com PEP)
         const sghEssencialModules = [
             "Faturamento de AIH",
             "Faturamento de Ambulatório",
@@ -2048,7 +2066,7 @@
             "Chamada Digital",
             "Recepção Interna",
             "Recepção Externa",
-            "App Checagem Oncológica PEP",
+            "PEP - Prontuário Eletrônico do Paciente", // Atualizado!
             "Controle de Estoque",
             "Financeiro",
             "Painel Estatístico_Gestão a Vista (Web/CS)"
@@ -2108,9 +2126,7 @@
         function setupProposalTypeButtons() {
             document.querySelectorAll('.proposal-type-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // Remove classe 'active' de todos
                     document.querySelectorAll('.proposal-type-btn').forEach(b => b.classList.remove('active'));
-                    // Adiciona 'active' ao clicado
                     this.classList.add('active');
 
                     const type = this.getAttribute('data-type');
@@ -2120,13 +2136,11 @@
         }
 
         function applyProposalType(type) {
-            // Desmarca todos os checkboxes
             document.querySelectorAll('#modulesList input[type="checkbox"]').forEach(cb => {
                 cb.checked = false;
             });
 
             if (type === 'essencial') {
-                // Marca os módulos do SGH ESSENCIAL
                 sghEssencialModules.forEach(moduleName => {
                     const checkboxId = `module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`;
                     const checkbox = document.getElementById(checkboxId);
@@ -2135,14 +2149,11 @@
                     }
                 });
             } else if (type === 'todas') {
-                // Marca todos os módulos
                 document.querySelectorAll('#modulesList input[type="checkbox"]').forEach(cb => {
                     cb.checked = true;
                 });
             }
-            // Se for 'aberta', não marca nada (já desmarcado)
 
-            // Mostra/oculta configurações especiais conforme necessário
             updateSpecialConfigsVisibility();
         }
 
@@ -2518,58 +2529,103 @@
             let totalMensal = 0;
             let totalImplantacao = 0;
             let selectedModules = [];
+            let isSghEssencial = false;
 
-            allModules.forEach(moduleName => {
-                const checkbox = document.getElementById(`module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`);
-                if (checkbox && checkbox.checked) {
-                    let valorMensal = 0;
+            // Verifica se SGH ESSENCIAL está ativo
+            const sghEssencialBtn = document.querySelector('.proposal-type-btn[data-type="essencial"]');
+            if (sghEssencialBtn && sghEssencialBtn.classList.contains('active')) {
+                isSghEssencial = true;
+            }
 
-                    if (["Agendamento Online", "CARTÃO DE DESCONTO", "SGO", "SMS"].includes(moduleName)) {
-                        valorMensal = getSpecialModuleValue(moduleName);
-                    } else {
-                        if (pricingData[establishment] && pricingData[establishment][bedRange]) {
-                            valorMensal = pricingData[establishment][bedRange][moduleName] || 0;
-                            if (typeof valorMensal === 'string') {
-                                valorMensal = 0;
+            if (isSghEssencial) {
+                // Adiciona o item "SGH ESSENCIAL" à proposta
+                const valorMensal = 5800.00;
+                const valorImplantacao = 0; // Incluído no mensal
+
+                selectedModules.push({
+                    name: "SGH ESSENCIAL (Pacote Fechado)",
+                    monthly: valorMensal,
+                    implantation: valorImplantacao
+                });
+
+                const row = document.createElement('tr');
+
+                const nameCell = document.createElement('td');
+                nameCell.textContent = "SGH ESSENCIAL (Pacote Fechado)";
+                row.appendChild(nameCell);
+
+                const mensalCell = document.createElement('td');
+                mensalCell.textContent = formatCurrency(valorMensal);
+                mensalCell.className = 'editable';
+                mensalCell.dataset.type = 'mensal';
+                mensalCell.addEventListener('click', makeEditable);
+                row.appendChild(mensalCell);
+
+                const implantacaoCell = document.createElement('td');
+                implantacaoCell.textContent = formatCurrency(valorImplantacao);
+                implantacaoCell.className = 'editable';
+                implantacaoCell.dataset.type = 'implantacao';
+                implantacaoCell.addEventListener('click', makeEditable);
+                row.appendChild(implantacaoCell);
+
+                tableBody.appendChild(row);
+
+                totalMensal += valorMensal;
+                totalImplantacao += valorImplantacao;
+            } else {
+                // Processa módulos individuais
+                allModules.forEach(moduleName => {
+                    const checkbox = document.getElementById(`module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`);
+                    if (checkbox && checkbox.checked) {
+                        let valorMensal = 0;
+
+                        if (["Agendamento Online", "CARTÃO DE DESCONTO", "SGO", "SMS"].includes(moduleName)) {
+                            valorMensal = getSpecialModuleValue(moduleName);
+                        } else {
+                            if (pricingData[establishment] && pricingData[establishment][bedRange]) {
+                                valorMensal = pricingData[establishment][bedRange][moduleName] || 0;
+                                if (typeof valorMensal === 'string') {
+                                    valorMensal = 0;
+                                }
                             }
                         }
+
+                        if (valorMensal > 0) {
+                            const valorImplantacao = getImplantacaoValue(moduleName);
+                            totalMensal += valorMensal;
+                            totalImplantacao += valorImplantacao;
+
+                            selectedModules.push({
+                                name: moduleName,
+                                monthly: valorMensal,
+                                implantation: valorImplantacao
+                            });
+
+                            const row = document.createElement('tr');
+
+                            const nameCell = document.createElement('td');
+                            nameCell.textContent = moduleName;
+                            row.appendChild(nameCell);
+
+                            const mensalCell = document.createElement('td');
+                            mensalCell.textContent = formatCurrency(valorMensal);
+                            mensalCell.className = 'editable';
+                            mensalCell.dataset.type = 'mensal';
+                            mensalCell.addEventListener('click', makeEditable);
+                            row.appendChild(mensalCell);
+
+                            const implantacaoCell = document.createElement('td');
+                            implantacaoCell.textContent = formatCurrency(valorImplantacao);
+                            implantacaoCell.className = 'editable';
+                            implantacaoCell.dataset.type = 'implantacao';
+                            implantacaoCell.addEventListener('click', makeEditable);
+                            row.appendChild(implantacaoCell);
+
+                            tableBody.appendChild(row);
+                        }
                     }
-
-                    if (valorMensal > 0) {
-                        const valorImplantacao = getImplantacaoValue(moduleName);
-                        totalMensal += valorMensal;
-                        totalImplantacao += valorImplantacao;
-
-                        selectedModules.push({
-                            name: moduleName,
-                            monthly: valorMensal,
-                            implantation: valorImplantacao
-                        });
-
-                        const row = document.createElement('tr');
-
-                        const nameCell = document.createElement('td');
-                        nameCell.textContent = moduleName;
-                        row.appendChild(nameCell);
-
-                        const mensalCell = document.createElement('td');
-                        mensalCell.textContent = formatCurrency(valorMensal);
-                        mensalCell.className = 'editable';
-                        mensalCell.dataset.type = 'mensal';
-                        mensalCell.addEventListener('click', makeEditable);
-                        row.appendChild(mensalCell);
-
-                        const implantacaoCell = document.createElement('td');
-                        implantacaoCell.textContent = formatCurrency(valorImplantacao);
-                        implantacaoCell.className = 'editable';
-                        implantacaoCell.dataset.type = 'implantacao';
-                        implantacaoCell.addEventListener('click', makeEditable);
-                        row.appendChild(implantacaoCell);
-
-                        tableBody.appendChild(row);
-                    }
-                }
-            });
+                });
+            }
 
             if (selectedModules.length === 0) {
                 alert("⚠️ Selecione pelo menos um módulo.");
@@ -2587,6 +2643,10 @@
             document.getElementById('parcelaTotal').textContent = formatCurrency(parcelaTotal);
             document.getElementById('formaPagamento').textContent = `${installmentCount}x de ${formatCurrency(parcelaValor)} sem juros`;
 
+            // Mostra/oculta observação SGH ESSENCIAL
+            const sghNotice = document.getElementById('sghEssencialNotice');
+            sghNotice.style.display = isSghEssencial ? 'block' : 'none';
+
             // Mostra o resultado
             document.getElementById('proposalResult').style.display = 'block';
 
@@ -2596,6 +2656,7 @@
                 bedRange,
                 installmentCount,
                 selectedModules,
+                isSghEssencial,
                 totals: {
                     monthly: totalMensal,
                     implantation: totalImplantacao,
@@ -2747,24 +2808,30 @@
                     }
                 });
 
-                proposal.selectedModules.forEach(module => {
-                    const checkboxId = `module_${module.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
-                    const checkbox = document.getElementById(checkboxId);
-                    if (checkbox) {
-                        checkbox.checked = true;
+                // Se for SGH ESSENCIAL, ativa o botão
+                if (proposal.isSghEssencial) {
+                    document.querySelector('.proposal-type-btn[data-type="essencial"]').click();
+                } else {
+                    // Carrega os módulos individuais
+                    proposal.selectedModules.forEach(module => {
+                        const checkboxId = `module_${module.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                        const checkbox = document.getElementById(checkboxId);
+                        if (checkbox) {
+                            checkbox.checked = true;
 
-                        const configId = {
-                            "Agendamento Online": "agendamentoConfig",
-                            "CARTÃO DE DESCONTO": "cartaoConfig",
-                            "SGO": "sgoConfig",
-                            "SMS": "smsConfig"
-                        }[module.name];
+                            const configId = {
+                                "Agendamento Online": "agendamentoConfig",
+                                "CARTÃO DE DESCONTO": "cartaoConfig",
+                                "SGO": "sgoConfig",
+                                "SMS": "smsConfig"
+                            }[module.name];
 
-                        if (configId) {
-                            document.getElementById(configId).style.display = 'block';
+                            if (configId) {
+                                document.getElementById(configId).style.display = 'block';
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 document.querySelector('[data-tab="proposal"]').click();
                 generateProposal();
