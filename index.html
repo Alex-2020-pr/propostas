@@ -629,7 +629,7 @@
                 
                 <div class="admin-grid">
                     <div class="admin-card">
-                        <h3>Módulos Normais</h3>
+                        <h3>Valores Mensais por Módulo</h3>
                         <div class="form-group">
                             <label for="adminModuleSelect">Selecione um Módulo:</label>
                             <select id="adminModuleSelect" style="width: 100%; padding: 10px;">
@@ -641,6 +641,22 @@
                         </div>
                         <button class="btn btn-success" onclick="saveAdminChanges()" style="margin-top: 20px;">
                             💾 Salvar Alterações
+                        </button>
+                    </div>
+
+                    <div class="admin-card">
+                        <h3>Valores de Implantação por Módulo</h3>
+                        <div class="form-group">
+                            <label for="adminImplantModuleSelect">Selecione um Módulo:</label>
+                            <select id="adminImplantModuleSelect" style="width: 100%; padding: 10px;">
+                                <option value="">-- Selecione --</option>
+                            </select>
+                        </div>
+                        <div id="adminImplantValueInputs" style="margin-top: 20px;">
+                            <!-- Inputs gerados dinamicamente -->
+                        </div>
+                        <button class="btn btn-success" onclick="saveImplantAdminChanges()" style="margin-top: 20px;">
+                            💾 Salvar Alterações de Implantação
                         </button>
                     </div>
 
@@ -1925,68 +1941,71 @@
                     "10000": 1200.00
                 },
                 "implantacao": {
-                    "Faturamento de AIH": 4800.00,
-                    "Faturamento de Ambulatório": 2400.00,
-                    "Faturamento de Convênios": 7200.00,
-                    "Controle de Estoque": 4800.00,
-                    "Recepção Interna": 2400.00,
-                    "Recepção Externa": 2400.00,
-                    "SADT - Radiologia": 1800.00,
-                    "SADT - Laboratório": 4200.00,
-                    "SADT - Endoscopia": 2400.00,
-                    "SADT - Anatomia Patológica": 2400.00,
-                    "SADT - Ultra-Sonografia": 2400.00,
-                    "Bloco Cirúrgico": 2400.00,
-                    "SADT - Tomografia": 2400.00,
-                    "Contabilidade": 4200.00,
-                    "Financeiro": 4800.00,
-                    "APAC": 3600.00,
-                    "Custos": 4200.00,
-                    "SADT - Hemodinâmica": 2400.00,
-                    "Folha de Pagamento": 16000.00,
-                    "Patrimônio": 1800.00,
+                    // Valores de implantação atualizados conforme planilha "taxa de implantação.xlsx"
+                    "Faturamento de AIH": 5600.00,
+                    "Faturamento de Ambulatório": 5600.00,
+                    "Faturamento de Convênios": 7875.00,
+                    "Controle de Estoque": 21875.00,
+                    "Recepção Interna": 4200.00,
+                    "Recepção Externa": 3675.00,
+                    "SADT - Radiologia": 2100.00,
+                    "SADT - Laboratório": 7175.00,
+                    "SADT - Endoscopia": 2100.00,
+                    "SADT - Anatomia Patológica": 2100.00,
+                    "SADT - Ultra-Sonografia": 2100.00,
+                    "Bloco Cirúrgico": 2275.00,
+                    "SADT - Tomografia": 2100.00,
+                    "Contabilidade": 0, // Não consta na planilha
+                    "Financeiro": 7000.00,
+                    "APAC": 5600.00,
+                    "Custos": 16800.00,
+                    "SADT - Hemodinâmica": 2100.00,
+                    "Folha de Pagamento": 0, // Não consta
+                    "Patrimônio": 0, // Não consta
                     "SIG - Sistema de Informações Gerenciais": 0,
-                    "SADT- Outros": 2400.00,
-                    "Orçamento": 1800.00,
-                    "SADT- Ressonância Magnética": 2400.00,
-                    "SGHIntelligence": 7200.00,
-                    "Agendamento (normal)": 1800.00,
-                    "Agendamento de Quimmioterapia": 2400.00,
-                    "Agendamento de Plantão": 1800.00,
-                    "SADT- Hemoterapia": 2400.00,
-                    "Painel Eletrônico*": 1800.00,
-                    "PACs (apenas Worklist)": 1800.00,
-                    "SPED": 1200.00,
-                    "Gestão de Repasse e Terceiros": 3000.00,
-                    "SAC *": 600.00,
-                    "Controle de Acessos": 1800.00,
-                    "Higienização de Leitos *": 1200.00,
-                    "DMED": 1200.00,
-                    "Web Service DICOM": 1200.00,
-                    "Integrador Laboratório Web Service": 1200.00,
-                    "Integrador Laboratório WebService Padrão SPDATA": 1200.00,
-                    "PEP - Prontuário Eletrônico do Paciente": 1200.00,
-                    "Nota Fiscal Eletrônica": 1800.00,
-                    "Portal de Serviços": 1800.00,
-                    "Laudo Web": 1200.00,
-                    "SGHQuali": 7200.00,
-                    "Portal de Compras": 6600.00,
-                    "Chamada Digital": 1800.00,
-                    "EFD REINF": 3000.00,
-                    "SPD STORAGE": 0,
+                    "SADT- Outros": 700.00,
+                    "Orçamento": 0, // Não consta
+                    "SADT- Ressonância Magnética": 2100.00,
+                    "SGHIntelligence": 0, // Não consta
+                    "Agendamento (normal)": 1050.00,
+                    "Agendamento de Quimmioterapia": 0, // Não consta
+                    "Agendamento de Plantão": 0, // Não consta
+                    "SADT- Hemoterapia": 0, // Não consta
+                    "Painel Eletrônico*": 0, // Não consta
+                    "PACs (apenas Worklist)": 0, // Não consta
+                    "SPED": 1050.00,
+                    "Gestão de Repasse e Terceiros": 0, // Não consta
+                    "SAC *": 0, // Não consta
+                    "Controle de Acessos": 0, // Não consta
+                    "Higienização de Leitos *": 2975.00,
+                    "DMED": 0, // Não consta
+                    "Web Service DICOM": 0, // Não consta
+                    "Integrador Laboratório Web Service": 4375.00,
+                    "Integrador Laboratório WebService Padrão SPDATA": 4375.00,
+                    "PEP - Prontuário Eletrônico do Paciente": 67725.00,
+                    "Nota Fiscal Eletrônica": 2100.00,
+                    "Portal de Serviços": 4200.00,
+                    "Laudo Web": 4375.00,
+                    "SGHQuali": 2000.00,
+                    "Portal de Compras": 0, // Não consta
+                    "Chamada Digital": 2100.00,
+                    "EFD REINF": 0, // Não consta
+                    "SPD STORAGE": 4200.00,
                     "E-Social": 0,
-                    "Aplicação Web Custos": 2400.00,
-                    "CEMEX": 9500.00,
-                    "Interação API (Laudos)": 1800.00,
-                    "SGH Intelligence Web": 0,
-                    "SGH Intelligence Custos": 2400.00,
-                    "Painel Estatístico_Gestão a Vista (Web/CS)": 1800.00,
-                    "Gerador de Relatorios": 0,
-                    "Central de reservas de Leitos": 1800.00,
-                    "Agendamento Online": 3200.00,
-                    "CARTÃO DE DESCONTO": 7200.00,
-                    "SGO": 3000.00,
-                    "SMS": 1800.00
+                    "Aplicação Web Custos": 7700.00,
+                    "CEMEX": 0, // Não consta
+                    "Interação API (Laudos)": 2800.00,
+                    "SGH Intelligence Web": 4000.00,
+                    "SGH Intelligence Custos": 0, // Não consta
+                    "Painel Estatístico_Gestão a Vista (Web/CS)": 3675.00,
+                    "Gerador de Relatorios": 1050.00,
+                    "Central de reservas de Leitos": 0, // Não consta
+
+                    // Módulos especiais
+                    "Agendamento Online": 7000.00, // Call Center até 1000
+                    "CARTÃO DE DESCONTO": 0, // Não definido na planilha, manter 0 por enquanto
+                    "SGO": 3000.00, // Valor mínimo
+                    "SMS": 0 // Não consta
                 }
             }
         };
@@ -2057,7 +2076,7 @@
             "SMS"
         ];
 
-        // Módulos do pacote SGH ESSENCIAL (atualizado com PEP)
+        // Módulos do pacote SGH ESSENCIAL
         const sghEssencialModules = [
             "Faturamento de AIH",
             "Faturamento de Ambulatório",
@@ -2066,7 +2085,7 @@
             "Chamada Digital",
             "Recepção Interna",
             "Recepção Externa",
-            "PEP - Prontuário Eletrônico do Paciente", // Atualizado!
+            "PEP - Prontuário Eletrônico do Paciente",
             "Controle de Estoque",
             "Financeiro",
             "Painel Estatístico_Gestão a Vista (Web/CS)"
@@ -2217,17 +2236,29 @@
             const select = document.getElementById('adminModuleSelect');
             select.innerHTML = '<option value="">-- Selecione um Módulo --</option>';
 
+            const implantSelect = document.getElementById('adminImplantModuleSelect');
+            implantSelect.innerHTML = '<option value="">-- Selecione um Módulo --</option>';
+
             allModules.forEach(moduleName => {
                 if (!["Agendamento Online", "CARTÃO DE DESCONTO", "SGO", "SMS"].includes(moduleName)) {
                     const option = document.createElement('option');
                     option.value = moduleName;
                     option.textContent = moduleName;
                     select.appendChild(option);
+
+                    const implantOption = document.createElement('option');
+                    implantOption.value = moduleName;
+                    implantOption.textContent = moduleName;
+                    implantSelect.appendChild(implantOption);
                 }
             });
 
             select.addEventListener('change', function() {
                 generateAdminInputs(this.value);
+            });
+
+            implantSelect.addEventListener('change', function() {
+                generateImplantAdminInputs(this.value);
             });
 
             document.getElementById('adminSpecialModuleSelect').addEventListener('change', function() {
@@ -2241,7 +2272,7 @@
                 return;
             }
 
-            let html = `<h4>Edite os valores para: ${moduleName}</h4>`;
+            let html = `<h4>Edite os valores mensais para: ${moduleName}</h4>`;
 
             for (let estab in pricingData) {
                 if (estab === 'special') continue;
@@ -2259,6 +2290,25 @@
             }
 
             document.getElementById('adminValueInputs').innerHTML = html;
+        }
+
+        function generateImplantAdminInputs(moduleName) {
+            if (!moduleName) {
+                document.getElementById('adminImplantValueInputs').innerHTML = '';
+                return;
+            }
+
+            let html = `<h4>Edite o valor de implantação para: ${moduleName}</h4>`;
+
+            const implantValue = pricingData.special.implantacao[moduleName] || 0;
+            html += `
+                <div class="form-group">
+                    <label>Valor de Implantação (R$):</label>
+                    <input type="number" step="0.01" id="implantValueInput" value="${implantValue}" style="width: 100%; padding: 8px;">
+                </div>
+            `;
+
+            document.getElementById('adminImplantValueInputs').innerHTML = html;
         }
 
         function generateSpecialAdminInputs(moduleName) {
@@ -2381,7 +2431,21 @@
             });
 
             savePricingData();
-            alert("✅ Valores atualizados com sucesso!");
+            alert("✅ Valores mensais atualizados com sucesso!");
+        }
+
+        function saveImplantAdminChanges() {
+            const moduleName = document.getElementById('adminImplantModuleSelect').value;
+            if (!moduleName) {
+                alert("Selecione um módulo primeiro.");
+                return;
+            }
+
+            const implantValue = parseFloat(document.getElementById('implantValueInput').value) || 0;
+            pricingData.special.implantacao[moduleName] = implantValue;
+
+            savePricingData();
+            alert(`✅ Valor de implantação para "${moduleName}" atualizado com sucesso!`);
         }
 
         function saveSpecialAdminChanges() {
@@ -2485,24 +2549,13 @@
                 return pricingData.special.implantacao[moduleName] || 0;
             }
 
-            const establishment = document.getElementById('establishment').value;
-            const bedRange = document.getElementById('bedRange').value;
-
-            if (!establishment || !bedRange) return 0;
-
+            // Retorna o valor de implantação específico do módulo
             if (pricingData.special.implantacao[moduleName]) {
                 return pricingData.special.implantacao[moduleName];
             }
 
-            let valorMensal = 0;
-            if (pricingData[establishment] && pricingData[establishment][bedRange]) {
-                valorMensal = pricingData[establishment][bedRange][moduleName] || 0;
-                if (typeof valorMensal === 'string') {
-                    valorMensal = 0;
-                }
-            }
-
-            return valorMensal * 10;
+            // Fallback: se não tiver valor de implantação definido, retorna 0
+            return 0;
         }
 
         function formatCurrency(value) {
@@ -2531,16 +2584,14 @@
             let selectedModules = [];
             let isSghEssencial = false;
 
-            // Verifica se SGH ESSENCIAL está ativo
             const sghEssencialBtn = document.querySelector('.proposal-type-btn[data-type="essencial"]');
             if (sghEssencialBtn && sghEssencialBtn.classList.contains('active')) {
                 isSghEssencial = true;
             }
 
             if (isSghEssencial) {
-                // Adiciona o item "SGH ESSENCIAL" à proposta
                 const valorMensal = 5800.00;
-                const valorImplantacao = 0; // Incluído no mensal
+                const valorImplantacao = 0;
 
                 selectedModules.push({
                     name: "SGH ESSENCIAL (Pacote Fechado)",
@@ -2549,7 +2600,6 @@
                 });
 
                 const row = document.createElement('tr');
-
                 const nameCell = document.createElement('td');
                 nameCell.textContent = "SGH ESSENCIAL (Pacote Fechado)";
                 row.appendChild(nameCell);
@@ -2573,7 +2623,6 @@
                 totalMensal += valorMensal;
                 totalImplantacao += valorImplantacao;
             } else {
-                // Processa módulos individuais
                 allModules.forEach(moduleName => {
                     const checkbox = document.getElementById(`module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`);
                     if (checkbox && checkbox.checked) {
@@ -2602,7 +2651,6 @@
                             });
 
                             const row = document.createElement('tr');
-
                             const nameCell = document.createElement('td');
                             nameCell.textContent = moduleName;
                             row.appendChild(nameCell);
@@ -2643,14 +2691,11 @@
             document.getElementById('parcelaTotal').textContent = formatCurrency(parcelaTotal);
             document.getElementById('formaPagamento').textContent = `${installmentCount}x de ${formatCurrency(parcelaValor)} sem juros`;
 
-            // Mostra/oculta observação SGH ESSENCIAL
             const sghNotice = document.getElementById('sghEssencialNotice');
             sghNotice.style.display = isSghEssencial ? 'block' : 'none';
 
-            // Mostra o resultado
             document.getElementById('proposalResult').style.display = 'block';
 
-            // Retorna os dados da proposta para possível salvamento
             return {
                 establishment,
                 bedRange,
@@ -2808,11 +2853,9 @@
                     }
                 });
 
-                // Se for SGH ESSENCIAL, ativa o botão
                 if (proposal.isSghEssencial) {
                     document.querySelector('.proposal-type-btn[data-type="essencial"]').click();
                 } else {
-                    // Carrega os módulos individuais
                     proposal.selectedModules.forEach(module => {
                         const checkboxId = `module_${module.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
                         const checkbox = document.getElementById(checkboxId);
