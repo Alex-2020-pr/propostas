@@ -134,14 +134,43 @@
             border-color: var(--secondary);
             background-color: white;
         }
+        .module-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        .module-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #555;
+            transition: all 0.3s;
+            border-radius: 8px 8px 0 0;
+            margin-right: 5px;
+        }
+        .module-tab.active {
+            background: var(--secondary);
+            color: white;
+        }
+        .module-category {
+            display: none;
+            margin-top: 20px;
+        }
+        .module-category.active {
+            display: block;
+        }
         .module-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 15px;
             margin: 20px 0;
         }
         .module-item {
             display: flex;
+            flex-direction: column;
             align-items: center;
             background: #f8f9fa;
             padding: 12px 15px;
@@ -149,13 +178,19 @@
             border: 2px solid transparent;
             cursor: pointer;
             transition: all 0.2s;
+            text-align: center;
         }
         .module-item:hover {
             background: #e3f2fd;
             border-color: var(--secondary);
         }
+        .module-item i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
         .module-item input[type="checkbox"] {
-            margin-right: 12px;
+            margin: 0;
             transform: scale(1.2);
             cursor: pointer;
         }
@@ -163,6 +198,9 @@
             margin: 0;
             cursor: pointer;
             font-weight: 500;
+            font-size: 0.9rem;
+            word-wrap: break-word;
+            max-width: 140px;
         }
         .special-config {
             background: #e3f2fd;
@@ -414,7 +452,7 @@
     <div class="container">
         <header>
             <!-- LOGO DA SPDATA -->
-            <img src="spdatavazado.png" alt="Logo da Spdata" class="logo">
+            <img src="https://via.placeholder.com/150x50?text=Logo+Spdata" alt="Logo da Spdata" class="logo">
             <h1>Gerador de Propostas Comerciais</h1>
             <p>Spdata - Soluções em Tecnologia para Saúde</p>
         </header>
@@ -476,10 +514,276 @@
                         <button class="proposal-type-btn" data-type="todas">TODAS SOLUÇÕES</button>
                     </div>
                 </div>
-                <h2>2. Selecione os Módulos</h2>
-                <div class="module-grid" id="modulesList">
-                    <!-- Módulos serão carregados aqui -->
+                <h2>2. Selecione as Soluções</h2>
+                <!-- Abas de Categorias -->
+                <div class="module-tabs">
+                    <button class="module-tab active" data-category="assistencial">Controle Assistencial</button>
+                    <button class="module-tab" data-category="administrativo">Controle Administrativo</button>
+                    <button class="module-tab" data-category="faturamento">Apoio e Faturamento</button>
+                    <button class="module-tab" data-category="suprimentos">Controle de Suprimentos</button>
+                    <button class="module-tab" data-category="acolhimento">Acolhimento</button>
                 </div>
+
+                <!-- Categoria: Controle Assistencial -->
+                <div id="assistencial" class="module-category active">
+                    <div class="module-grid">
+                        <div class="module-item">
+                            <i class="fas fa-file-medical-alt"></i>
+                            <input type="checkbox" id="module_PEP" value="PEP - Prontuário Eletrônico do Paciente" data-module="PEP - Prontuário Eletrônico do Paciente">
+                            <label for="module_PEP">PEP</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-hospital"></i>
+                            <input type="checkbox" id="module_SADT_Radiologia" value="SADT - Radiologia" data-module="SADT - Radiologia">
+                            <label for="module_SADT_Radiologia">Radiologia</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-flask"></i>
+                            <input type="checkbox" id="module_SADT_Laboratorio" value="SADT - Laboratório" data-module="SADT - Laboratório">
+                            <label for="module_SADT_Laboratorio">Laboratório</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-stethoscope"></i>
+                            <input type="checkbox" id="module_SADT_Endoscopia" value="SADT - Endoscopia" data-module="SADT - Endoscopia">
+                            <label for="module_SADT_Endoscopia">Endoscopia</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-microscope"></i>
+                            <input type="checkbox" id="module_SADT_Anatomia" value="SADT - Anatomia Patológica" data-module="SADT - Anatomia Patológica">
+                            <label for="module_SADT_Anatomia">Anatomia Patológica</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-wave-square"></i>
+                            <input type="checkbox" id="module_SADT_Ultra" value="SADT - Ultra-Sonografia" data-module="SADT - Ultra-Sonografia">
+                            <label for="module_SADT_Ultra">Ultra-Sonografia</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-heartbeat"></i>
+                            <input type="checkbox" id="module_SADT_Hemodinamica" value="SADT - Hemodinâmica" data-module="SADT - Hemodinâmica">
+                            <label for="module_SADT_Hemodinamica">Hemodinâmica</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-tint"></i>
+                            <input type="checkbox" id="module_SADT_Hemoterapia" value="SADT- Hemoterapia" data-module="SADT- Hemoterapia">
+                            <label for="module_SADT_Hemoterapia">Hemoterapia</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-brain"></i>
+                            <input type="checkbox" id="module_SADT_Tomografia" value="SADT - Tomografia" data-module="SADT - Tomografia">
+                            <label for="module_SADT_Tomografia">Tomografia</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-x-ray"></i>
+                            <input type="checkbox" id="module_SADT_Ressonancia" value="SADT- Ressonância Magnética" data-module="SADT- Ressonância Magnética">
+                            <label for="module_SADT_Ressonancia">Ressonância Magnética</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-procedures"></i>
+                            <input type="checkbox" id="module_Bloco_Cirurgico" value="Bloco Cirúrgico" data-module="Bloco Cirúrgico">
+                            <label for="module_Bloco_Cirurgico">Bloco Cirúrgico</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-laptop-medical"></i>
+                            <input type="checkbox" id="module_PACS" value="PACs (apenas Worklist)" data-module="PACs (apenas Worklist)">
+                            <label for="module_PACS">PACS</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-file-signature"></i>
+                            <input type="checkbox" id="module_Laudo_Web" value="Laudo Web" data-module="Laudo Web">
+                            <label for="module_Laudo_Web">Laudo Web</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categoria: Controle Administrativo -->
+                <div id="administrativo" class="module-category">
+                    <div class="module-grid">
+                        <div class="module-item">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <input type="checkbox" id="module_Financeiro" value="Financeiro" data-module="Financeiro">
+                            <label for="module_Financeiro">Financeiro</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-calculator"></i>
+                            <input type="checkbox" id="module_Contabilidade" value="Contabilidade" data-module="Contabilidade">
+                            <label for="module_Contabilidade">Contabilidade</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-percentage"></i>
+                            <input type="checkbox" id="module_DMED" value="DMED" data-module="DMED">
+                            <label for="module_DMED">DMED</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <input type="checkbox" id="module_EFD_REINF" value="EFD REINF" data-module="EFD REINF">
+                            <label for="module_EFD_REINF">EFD-REINF</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-headset"></i>
+                            <input type="checkbox" id="module_SAC" value="SAC *" data-module="SAC *">
+                            <label for="module_SAC">SAC Ouvidoria</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-file-invoice"></i>
+                            <input type="checkbox" id="module_Nota_Fiscal" value="Nota Fiscal Eletrônica" data-module="Nota Fiscal Eletrônica">
+                            <label for="module_Nota_Fiscal">Nota Fiscal Eletrônica</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-chart-line"></i>
+                            <input type="checkbox" id="module_SGHIntelligence" value="SGHIntelligence" data-module="SGHIntelligence">
+                            <label for="module_SGHIntelligence">SGH Intelligence</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-home"></i>
+                            <input type="checkbox" id="module_Patrimonio" value="Patrimônio" data-module="Patrimônio">
+                            <label for="module_Patrimonio">Gestão Patrimonial</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-cogs"></i>
+                            <input type="checkbox" id="module_Gestao_Repasse" value="Gestão de Repasse e Terceiros" data-module="Gestão de Repasse e Terceiros">
+                            <label for="module_Gestao_Repasse">Gestão de Repasses</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-chart-pie"></i>
+                            <input type="checkbox" id="module_Custos" value="Custos" data-module="Custos">
+                            <label for="module_Custos">Gestão de Custos</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-users-cog"></i>
+                            <input type="checkbox" id="module_Folha_Pagamento" value="Folha de Pagamento" data-module="Folha de Pagamento">
+                            <label for="module_Folha_Pagamento">Folha de Pagamento</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-file-alt"></i>
+                            <input type="checkbox" id="module_SPED" value="SPED" data-module="SPED">
+                            <label for="module_SPED">SPED</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-signal"></i>
+                            <input type="checkbox" id="module_SIG" value="SIG - Sistema de Informações Gerenciais" data-module="SIG - Sistema de Informações Gerenciais">
+                            <label for="module_SIG">SIG</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-chart-area"></i>
+                            <input type="checkbox" id="module_SGHQuali" value="SGHQuali" data-module="SGHQuali">
+                            <label for="module_SGHQuali">SGH Quali</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-tasks"></i>
+                            <input type="checkbox" id="module_Orcamento" value="Orçamento" data-module="Orçamento">
+                            <label for="module_Orcamento">Orçamento</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categoria: Apoio e Faturamento -->
+                <div id="faturamento" class="module-category">
+                    <div class="module-grid">
+                        <div class="module-item">
+                            <i class="fas fa-file-invoice"></i>
+                            <input type="checkbox" id="module_Faturamento_Convenios" value="Faturamento de Convênios" data-module="Faturamento de Convênios">
+                            <label for="module_Faturamento_Convenios">Fatur. Convênios</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-hospital-user"></i>
+                            <input type="checkbox" id="module_Faturamento_AIH" value="Faturamento de AIH" data-module="Faturamento de AIH">
+                            <label for="module_Faturamento_AIH">Fatur. AIH (SUS)</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-clinic-medical"></i>
+                            <input type="checkbox" id="module_Faturamento_Ambulatorial" value="Faturamento de Ambulatório" data-module="Faturamento de Ambulatório">
+                            <label for="module_Faturamento_Ambulatorial">Fatur. Ambulatório (SUS)</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-file-medical"></i>
+                            <input type="checkbox" id="module_APAC" value="APAC" data-module="APAC">
+                            <label for="module_APAC">APAC</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-chart-bar"></i>
+                            <input type="checkbox" id="module_Painel_Estatistico" value="Painel Estatístico_Gestão a Vista (Web/CS)" data-module="Painel Estatístico_Gestão a Vista (Web/CS)">
+                            <label for="module_Painel_Estatistico">Painel Estatístico</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-broom"></i>
+                            <input type="checkbox" id="module_Higienizacao" value="Higienização de Leitos *" data-module="Higienização de Leitos *">
+                            <label for="module_Higienizacao">Higienização</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-database"></i>
+                            <input type="checkbox" id="module_Storage" value="SPD STORAGE" data-module="SPD STORAGE">
+                            <label for="module_Storage">Storage</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <input type="checkbox" id="module_Gerador_Relatorios" value="Gerador de Relatorios" data-module="Gerador de Relatorios">
+                            <label for="module_Gerador_Relatorios">Gerador de Relatórios</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categoria: Controle de Suprimentos -->
+                <div id="suprimentos" class="module-category">
+                    <div class="module-grid">
+                        <div class="module-item">
+                            <i class="fas fa-warehouse"></i>
+                            <input type="checkbox" id="module_Controle_Estoque" value="Controle de Estoque" data-module="Controle de Estoque">
+                            <label for="module_Controle_Estoque">Controle de Estoque</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <input type="checkbox" id="module_Portal_Compras" value="Portal de Compras" data-module="Portal de Compras">
+                            <label for="module_Portal_Compras">Portal de Compras</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categoria: Acolhimento -->
+                <div id="acolhimento" class="module-category">
+                    <div class="module-grid">
+                        <div class="module-item">
+                            <i class="fas fa-user-md"></i>
+                            <input type="checkbox" id="module_Recepcao_Interna" value="Recepção Interna" data-module="Recepção Interna">
+                            <label for="module_Recepcao_Interna">Recepção Interna</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-user-clock"></i>
+                            <input type="checkbox" id="module_Recepcao_Externa" value="Recepção Externa" data-module="Recepção Externa">
+                            <label for="module_Recepcao_Externa">Recepção Externa</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-phone"></i>
+                            <input type="checkbox" id="module_Chamada_Digital" value="Chamada Digital" data-module="Chamada Digital">
+                            <label for="module_Chamada_Digital">Chamada Digital</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-lock"></i>
+                            <input type="checkbox" id="module_Controle_Acesso" value="Controle de Acessos" data-module="Controle de Acessos">
+                            <label for="module_Controle_Acesso">Controle de Acesso</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-calendar-check"></i>
+                            <input type="checkbox" id="module_Agendamento_Online" value="Agendamento Online" data-module="Agendamento Online">
+                            <label for="module_Agendamento_Online">Agendamento Online</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-id-card"></i>
+                            <input type="checkbox" id="module_Cartao_Desconto" value="CARTÃO DE DESCONTO" data-module="CARTÃO DE DESCONTO">
+                            <label for="module_Cartao_Desconto">Cartão Desconto</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-comment-dots"></i>
+                            <input type="checkbox" id="module_SMS" value="SMS" data-module="SMS">
+                            <label for="module_SMS">SMS</label>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-users"></i>
+                            <input type="checkbox" id="module_SGO" value="SGO" data-module="SGO">
+                            <label for="module_SGO">SGO</label>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Configurações Especiais -->
                 <div id="agendamentoConfig" class="special-config">
                     <h3>Configuração do Agendamento Online</h3>
@@ -1931,7 +2235,8 @@
                 }
             }
         };
-        // Lista de todos os módulos
+
+        // Lista de todos os módulos (para referência)
         const allModules = [
             "Faturamento de AIH",
             "Faturamento de Ambulatório",
@@ -1996,6 +2301,67 @@
             "SGO",
             "SMS"
         ];
+
+        // Mapeamento de módulos por categoria
+        const modulesByCategory = {
+            "assistencial": [
+                "PEP - Prontuário Eletrônico do Paciente",
+                "SADT - Radiologia",
+                "SADT - Laboratório",
+                "SADT - Endoscopia",
+                "SADT - Anatomia Patológica",
+                "SADT - Ultra-Sonografia",
+                "SADT - Hemodinâmica",
+                "SADT- Hemoterapia",
+                "SADT - Tomografia",
+                "SADT- Ressonância Magnética",
+                "Bloco Cirúrgico",
+                "PACs (apenas Worklist)",
+                "Laudo Web"
+            ],
+            "administrativo": [
+                "Financeiro",
+                "Contabilidade",
+                "DMED",
+                "EFD REINF",
+                "SAC *",
+                "Nota Fiscal Eletrônica",
+                "SGHIntelligence",
+                "Patrimônio",
+                "Gestão de Repasse e Terceiros",
+                "Custos",
+                "Folha de Pagamento",
+                "SPED",
+                "SIG - Sistema de Informações Gerenciais",
+                "SGHQuali",
+                "Orçamento"
+            ],
+            "faturamento": [
+                "Faturamento de Convênios",
+                "Faturamento de AIH",
+                "Faturamento de Ambulatório",
+                "APAC",
+                "Painel Estatístico_Gestão a Vista (Web/CS)",
+                "Higienização de Leitos *",
+                "SPD STORAGE",
+                "Gerador de Relatorios"
+            ],
+            "suprimentos": [
+                "Controle de Estoque",
+                "Portal de Compras"
+            ],
+            "acolhimento": [
+                "Recepção Interna",
+                "Recepção Externa",
+                "Chamada Digital",
+                "Controle de Acessos",
+                "Agendamento Online",
+                "CARTÃO DE DESCONTO",
+                "SMS",
+                "SGO"
+            ]
+        };
+
         // Módulos do pacote SGH ESSENCIAL
         const sghEssencialModules = [
             "Faturamento de AIH",
@@ -2010,16 +2376,18 @@
             "Financeiro",
             "Painel Estatístico_Gestão a Vista (Web/CS)"
         ];
+
         // Inicializa os eventos e carrega dados salvos
         document.addEventListener('DOMContentLoaded', function() {
             setupTabs();
             setupEstablishmentChangeListener();
             setupProposalTypeButtons();
-            loadModules();
+            setupModuleTabs();
             loadAdminModuleLists();
             loadSavedData();
             loadProposalHistory();
         });
+
         function setupTabs() {
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', function() {
@@ -2031,9 +2399,11 @@
                 });
             });
         }
+
         function setupEstablishmentChangeListener() {
             document.getElementById('establishment').addEventListener('change', updateBedRangeOptions);
         }
+
         function updateBedRangeOptions() {
             const establishment = document.getElementById('establishment').value;
             const bedRangeSelect = document.getElementById('bedRange');
@@ -2056,6 +2426,7 @@
                 });
             }
         }
+
         function setupProposalTypeButtons() {
             document.querySelectorAll('.proposal-type-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -2066,10 +2437,13 @@
                 });
             });
         }
+
         function applyProposalType(type) {
-            document.querySelectorAll('#modulesList input[type="checkbox"]').forEach(cb => {
+            // Desmarca todos os checkboxes em todas as categorias
+            document.querySelectorAll('.module-item input[type="checkbox"]').forEach(cb => {
                 cb.checked = false;
             });
+
             if (type === 'essencial') {
                 // Regra Adicionada: Seleciona automaticamente "HOSP FILANTROPICO" e "1 a 50 leitos"
                 document.getElementById('establishment').value = 'filantropico';
@@ -2077,25 +2451,31 @@
                 setTimeout(() => {
                     document.getElementById('bedRange').value = '1 a 50 leitos';
                 }, 100);
+
+                // Marca os módulos do pacote essencial
                 sghEssencialModules.forEach(moduleName => {
-                    const checkboxId = `module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`;
-                    const checkbox = document.getElementById(checkboxId);
+                    // Procura o checkbox correspondente em qualquer categoria
+                    const checkbox = document.querySelector(`input[data-module="${moduleName}"]`);
                     if (checkbox) {
                         checkbox.checked = true;
                     }
                 });
             } else if (type === 'todas') {
-                document.querySelectorAll('#modulesList input[type="checkbox"]').forEach(cb => {
+                // Marca todos os checkboxes
+                document.querySelectorAll('.module-item input[type="checkbox"]').forEach(cb => {
                     cb.checked = true;
                 });
             }
+
+            // Atualiza a visibilidade das configurações especiais
             updateSpecialConfigsVisibility();
         }
+
         function updateSpecialConfigsVisibility() {
             const specialModules = ["Agendamento Online", "CARTÃO DE DESCONTO", "SGO", "SMS"];
             specialModules.forEach(moduleName => {
-                const checkboxId = `module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`;
-                const checkbox = document.getElementById(checkboxId);
+                // Procura o checkbox correspondente
+                const checkbox = document.querySelector(`input[data-module="${moduleName}"]`);
                 const configId = {
                     "Agendamento Online": "agendamentoConfig",
                     "CARTÃO DE DESCONTO": "cartaoConfig",
@@ -2107,43 +2487,37 @@
                 }
             });
         }
-        function loadModules() {
-            const modulesList = document.getElementById('modulesList');
-            modulesList.innerHTML = '';
-            allModules.forEach(moduleName => {
-                const div = document.createElement('div');
-                div.className = 'module-item';
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = `module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`;
-                checkbox.value = moduleName;
-                checkbox.dataset.module = moduleName;
-                const label = document.createElement('label');
-                label.htmlFor = checkbox.id;
-                label.textContent = moduleName;
-                div.appendChild(checkbox);
-                div.appendChild(label);
-                modulesList.appendChild(div);
-                checkbox.addEventListener('change', function() {
-                    const configs = {
-                        "Agendamento Online": "agendamentoConfig",
-                        "CARTÃO DE DESCONTO": "cartaoConfig",
-                        "SGO": "sgoConfig",
-                        "SMS": "smsConfig"
-                    };
-                    const configId = configs[moduleName];
-                    if (configId) {
-                        document.getElementById(configId).style.display = this.checked ? 'block' : 'none';
-                    }
+
+        function setupModuleTabs() {
+            document.querySelectorAll('.module-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove a classe 'active' de todas as abas
+                    document.querySelectorAll('.module-tab').forEach(t => t.classList.remove('active'));
+                    // Esconde todas as categorias
+                    document.querySelectorAll('.module-category').forEach(c => c.classList.remove('active'));
+
+                    // Adiciona a classe 'active' à aba clicada
+                    this.classList.add('active');
+                    // Mostra a categoria correspondente
+                    const categoryId = this.getAttribute('data-category');
+                    document.getElementById(categoryId).classList.add('active');
                 });
             });
         }
+
         function loadAdminModuleLists() {
             const select = document.getElementById('adminModuleSelect');
             select.innerHTML = '<option value="">-- Selecione um Módulo --</option>';
             const implantSelect = document.getElementById('adminImplantModuleSelect');
             implantSelect.innerHTML = '<option value="">-- Selecione um Módulo --</option>';
-            allModules.forEach(moduleName => {
+
+            // Cria uma lista única de todos os módulos das categorias
+            const allUniqueModules = new Set();
+            for (const category in modulesByCategory) {
+                modulesByCategory[category].forEach(module => allUniqueModules.add(module));
+            }
+
+            Array.from(allUniqueModules).sort().forEach(moduleName => {
                 if (!["Agendamento Online", "CARTÃO DE DESCONTO", "SGO", "SMS"].includes(moduleName)) {
                     const option = document.createElement('option');
                     option.value = moduleName;
@@ -2155,6 +2529,7 @@
                     implantSelect.appendChild(implantOption);
                 }
             });
+
             select.addEventListener('change', function() {
                 generateAdminInputs(this.value);
             });
@@ -2165,6 +2540,7 @@
                 generateSpecialAdminInputs(this.value);
             });
         }
+
         function generateAdminInputs(moduleName) {
             if (!moduleName) {
                 document.getElementById('adminValueInputs').innerHTML = '';
@@ -2187,6 +2563,7 @@
             }
             document.getElementById('adminValueInputs').innerHTML = html;
         }
+
         function generateImplantAdminInputs(moduleName) {
             if (!moduleName) {
                 document.getElementById('adminImplantValueInputs').innerHTML = '';
@@ -2202,6 +2579,7 @@
             `;
             document.getElementById('adminImplantValueInputs').innerHTML = html;
         }
+
         function generateSpecialAdminInputs(moduleName) {
             if (!moduleName) {
                 document.getElementById('adminSpecialValueInputs').innerHTML = '';
@@ -2298,6 +2676,7 @@
             }
             document.getElementById('adminSpecialValueInputs').innerHTML = html;
         }
+
         function saveAdminChanges() {
             const inputs = document.querySelectorAll('.admin-input');
             inputs.forEach(input => {
@@ -2314,6 +2693,7 @@
             savePricingData();
             alert("✅ Valores mensais atualizados com sucesso!");
         }
+
         function saveImplantAdminChanges() {
             const moduleName = document.getElementById('adminImplantModuleSelect').value;
             if (!moduleName) {
@@ -2325,6 +2705,7 @@
             savePricingData();
             alert(`✅ Valor de implantação para "${moduleName}" atualizado com sucesso!`);
         }
+
         function saveSpecialAdminChanges() {
             const inputs = document.querySelectorAll('.special-admin-input');
             inputs.forEach(input => {
@@ -2350,9 +2731,11 @@
             savePricingData();
             alert("✅ Valores especiais atualizados com sucesso!");
         }
+
         function savePricingData() {
             localStorage.setItem('spdataPricingData', JSON.stringify(pricingData));
         }
+
         function loadSavedData() {
             const savedData = localStorage.getItem('spdataPricingData');
             if (savedData) {
@@ -2365,6 +2748,7 @@
                 }
             }
         }
+
         // ============= FUNÇÕES DE PROPOSTA =============
         function getSpecialModuleValue(moduleName) {
             switch(moduleName) {
@@ -2407,6 +2791,7 @@
                     return 0;
             }
         }
+
         function getImplantacaoValue(moduleName) {
             if (["Agendamento Online", "CARTÃO DE DESCONTO", "SGO", "SMS"].includes(moduleName)) {
                 return pricingData.special.implantacao[moduleName] || 0;
@@ -2418,6 +2803,7 @@
             // Fallback: se não tiver valor de implantação definido, retorna 0
             return 0;
         }
+
         function formatCurrency(value) {
             return new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
@@ -2425,6 +2811,7 @@
                 minimumFractionDigits: 2
             }).format(value);
         }
+
         function generateProposal() {
             const establishment = document.getElementById('establishment').value;
             const bedRange = document.getElementById('bedRange').value;
@@ -2433,16 +2820,19 @@
                 alert("⚠️ Por favor, selecione o tipo de estabelecimento e a faixa.");
                 return;
             }
+
             const tableBody = document.getElementById('proposalTableBody');
             tableBody.innerHTML = '';
             let totalMensal = 0;
             let totalImplantacao = 0;
             let selectedModules = [];
             let isSghEssencial = false;
+
             const sghEssencialBtn = document.querySelector('.proposal-type-btn[data-type="essencial"]');
             if (sghEssencialBtn && sghEssencialBtn.classList.contains('active')) {
                 isSghEssencial = true;
             }
+
             if (isSghEssencial) {
                 const valorMensal = 5800.00;
                 const valorImplantacao = 0;
@@ -2451,86 +2841,105 @@
                     monthly: valorMensal,
                     implantation: valorImplantacao
                 });
+
                 const row = document.createElement('tr');
                 const nameCell = document.createElement('td');
                 nameCell.textContent = "SGH ESSENCIAL (Pacote Fechado)";
                 row.appendChild(nameCell);
+
                 const mensalCell = document.createElement('td');
                 mensalCell.textContent = formatCurrency(valorMensal);
                 mensalCell.className = 'editable';
                 mensalCell.dataset.type = 'mensal';
                 mensalCell.addEventListener('click', makeEditable);
                 row.appendChild(mensalCell);
+
                 const implantacaoCell = document.createElement('td');
                 implantacaoCell.textContent = formatCurrency(valorImplantacao);
                 implantacaoCell.className = 'editable';
                 implantacaoCell.dataset.type = 'implantacao';
                 implantacaoCell.addEventListener('click', makeEditable);
                 row.appendChild(implantacaoCell);
+
                 tableBody.appendChild(row);
                 totalMensal += valorMensal;
                 totalImplantacao += valorImplantacao;
             } else {
-                allModules.forEach(moduleName => {
-                    const checkbox = document.getElementById(`module_${moduleName.replace(/[^a-zA-Z0-9]/g, '_')}`);
-                    if (checkbox && checkbox.checked) {
-                        let valorMensal = 0;
-                        if (["Agendamento Online", "CARTÃO DE DESCONTO", "SGO", "SMS"].includes(moduleName)) {
-                            valorMensal = getSpecialModuleValue(moduleName);
-                        } else {
-                            if (pricingData[establishment] && pricingData[establishment][bedRange]) {
-                                valorMensal = pricingData[establishment][bedRange][moduleName] || 0;
-                                if (typeof valorMensal === 'string') {
-                                    valorMensal = 0;
+                // Itera por todas as categorias e seus módulos
+                for (const category in modulesByCategory) {
+                    modulesByCategory[category].forEach(moduleName => {
+                        // Procura o checkbox correspondente
+                        const checkbox = document.querySelector(`input[data-module="${moduleName}"]`);
+                        if (checkbox && checkbox.checked) {
+                            let valorMensal = 0;
+                            if (["Agendamento Online", "CARTÃO DE DESCONTO", "SGO", "SMS"].includes(moduleName)) {
+                                valorMensal = getSpecialModuleValue(moduleName);
+                            } else {
+                                if (pricingData[establishment] && pricingData[establishment][bedRange]) {
+                                    valorMensal = pricingData[establishment][bedRange][moduleName] || 0;
+                                    if (typeof valorMensal === 'string') {
+                                        valorMensal = 0;
+                                    }
                                 }
                             }
+
+                            if (valorMensal > 0) {
+                                const valorImplantacao = getImplantacaoValue(moduleName);
+                                totalMensal += valorMensal;
+                                totalImplantacao += valorImplantacao;
+                                selectedModules.push({
+                                    name: moduleName,
+                                    monthly: valorMensal,
+                                    implantation: valorImplantacao
+                                });
+
+                                const row = document.createElement('tr');
+                                const nameCell = document.createElement('td');
+                                nameCell.textContent = moduleName;
+                                row.appendChild(nameCell);
+
+                                const mensalCell = document.createElement('td');
+                                mensalCell.textContent = formatCurrency(valorMensal);
+                                mensalCell.className = 'editable';
+                                mensalCell.dataset.type = 'mensal';
+                                mensalCell.addEventListener('click', makeEditable);
+                                row.appendChild(mensalCell);
+
+                                const implantacaoCell = document.createElement('td');
+                                implantacaoCell.textContent = formatCurrency(valorImplantacao);
+                                implantacaoCell.className = 'editable';
+                                implantacaoCell.dataset.type = 'implantacao';
+                                implantacaoCell.addEventListener('click', makeEditable);
+                                row.appendChild(implantacaoCell);
+
+                                tableBody.appendChild(row);
+                            }
                         }
-                        if (valorMensal > 0) {
-                            const valorImplantacao = getImplantacaoValue(moduleName);
-                            totalMensal += valorMensal;
-                            totalImplantacao += valorImplantacao;
-                            selectedModules.push({
-                                name: moduleName,
-                                monthly: valorMensal,
-                                implantation: valorImplantacao
-                            });
-                            const row = document.createElement('tr');
-                            const nameCell = document.createElement('td');
-                            nameCell.textContent = moduleName;
-                            row.appendChild(nameCell);
-                            const mensalCell = document.createElement('td');
-                            mensalCell.textContent = formatCurrency(valorMensal);
-                            mensalCell.className = 'editable';
-                            mensalCell.dataset.type = 'mensal';
-                            mensalCell.addEventListener('click', makeEditable);
-                            row.appendChild(mensalCell);
-                            const implantacaoCell = document.createElement('td');
-                            implantacaoCell.textContent = formatCurrency(valorImplantacao);
-                            implantacaoCell.className = 'editable';
-                            implantacaoCell.dataset.type = 'implantacao';
-                            implantacaoCell.addEventListener('click', makeEditable);
-                            row.appendChild(implantacaoCell);
-                            tableBody.appendChild(row);
-                        }
-                    }
-                });
+                    });
+                }
             }
+
             if (selectedModules.length === 0) {
                 alert("⚠️ Selecione pelo menos um módulo.");
                 return;
             }
+
             const totalGeral = totalMensal + totalImplantacao;
             const parcelaValor = totalImplantacao / installmentCount;
             const parcelaTotal = parcelaValor * installmentCount;
+
             document.getElementById('totalMensal').textContent = formatCurrency(totalMensal);
             document.getElementById('totalImplantacao').textContent = formatCurrency(totalImplantacao);
             document.getElementById('totalGeral').textContent = formatCurrency(totalGeral);
             document.getElementById('parcelaValor').textContent = formatCurrency(parcelaValor);
             document.getElementById('parcelaTotal').textContent = formatCurrency(parcelaTotal);
             document.getElementById('formaPagamento').textContent = `${installmentCount}x de ${formatCurrency(parcelaValor)} sem juros`;
+
             const sghNotice = document.getElementById('sghEssencialNotice');
             sghNotice.style.display = isSghEssencial ? 'block' : 'none';
+
             document.getElementById('proposalResult').style.display = 'block';
+
             return {
                 establishment,
                 bedRange,
@@ -2546,6 +2955,7 @@
                 date: new Date().toLocaleString('pt-BR')
             };
         }
+
         function makeEditable(event) {
             const cell = event.target;
             const currentValue = parseFloat(cell.textContent.replace(/[^\d,-]/g, '').replace(',', '.'));
@@ -2574,9 +2984,11 @@
             input.focus();
             input.select();
         }
+
         function recalculateTotals() {
             let totalMensal = 0;
             let totalImplantacao = 0;
+
             document.querySelectorAll('#proposalTableBody tr').forEach(row => {
                 const mensalCell = row.cells[1];
                 const implantacaoCell = row.cells[2];
@@ -2587,10 +2999,12 @@
                     totalImplantacao += implantacaoValue;
                 }
             });
+
             const installmentCount = parseInt(document.getElementById('installmentCount').value) || 1;
             const totalGeral = totalMensal + totalImplantacao;
             const parcelaValor = totalImplantacao / installmentCount;
             const parcelaTotal = parcelaValor * installmentCount;
+
             document.getElementById('totalMensal').textContent = formatCurrency(totalMensal);
             document.getElementById('totalImplantacao').textContent = formatCurrency(totalImplantacao);
             document.getElementById('totalGeral').textContent = formatCurrency(totalGeral);
@@ -2598,30 +3012,38 @@
             document.getElementById('parcelaTotal').textContent = formatCurrency(parcelaTotal);
             document.getElementById('formaPagamento').textContent = `${installmentCount}x de ${formatCurrency(parcelaValor)} sem juros`;
         }
+
         function saveCurrentProposal() {
             const proposalData = generateProposal();
             if (!proposalData) return;
+
             const proposalName = document.getElementById('proposalName').value || `Proposta ${new Date().toLocaleDateString()}`;
             proposalData.name = proposalName;
+
             let history = JSON.parse(localStorage.getItem('spdataProposalHistory') || '[]');
             history.unshift(proposalData);
             localStorage.setItem('spdataProposalHistory', JSON.stringify(history));
+
             alert(`✅ Proposta "${proposalName}" salva com sucesso!`);
             loadProposalHistory();
         }
+
         function loadProposalHistory() {
             const historyList = document.getElementById('historyList');
             const history = JSON.parse(localStorage.getItem('spdataProposalHistory') || '[]');
+
             if (history.length === 0) {
                 historyList.innerHTML = '<p style="text-align: center; padding: 40px; color: #777;">Nenhuma proposta salva ainda.</p>';
                 return;
             }
+
             historyList.innerHTML = '';
             history.forEach((proposal, index) => {
                 const item = document.createElement('div');
                 item.className = 'history-item';
                 const date = new Date(proposal.date);
                 const formattedDate = isNaN(date) ? proposal.date : date.toLocaleString('pt-BR');
+
                 item.innerHTML = `
                     <div class="history-actions">
                         <button class="btn btn-primary" onclick="loadProposal(${index})">Carregar</button>
@@ -2639,93 +3061,97 @@
                 historyList.appendChild(item);
             });
         }
+
         function loadProposal(index) {
             const history = JSON.parse(localStorage.getItem('spdataProposalHistory') || '[]');
             const proposal = history[index];
             if (!proposal) return;
+
             document.getElementById('establishment').value = proposal.establishment;
             updateBedRangeOptions();
             setTimeout(() => {
                 document.getElementById('bedRange').value = proposal.bedRange;
                 document.getElementById('installmentCount').value = proposal.installmentCount;
                 document.getElementById('proposalName').value = proposal.name;
-                document.querySelectorAll('#modulesList input[type="checkbox"]').forEach(cb => {
+
+                // Desmarca todos os checkboxes
+                document.querySelectorAll('.module-item input[type="checkbox"]').forEach(cb => {
                     cb.checked = false;
-                    const configId = {
-                        "Agendamento Online": "agendamentoConfig",
-                        "CARTÃO DE DESCONTO": "cartaoConfig",
-                        "SGO": "sgoConfig",
-                        "SMS": "smsConfig"
-                    }[cb.value];
-                    if (configId) {
-                        document.getElementById(configId).style.display = 'none';
-                    }
                 });
+
                 if (proposal.isSghEssencial) {
                     document.querySelector('.proposal-type-btn[data-type="essencial"]').click();
                 } else {
+                    // Marca os módulos da proposta
                     proposal.selectedModules.forEach(module => {
-                        const checkboxId = `module_${module.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
-                        const checkbox = document.getElementById(checkboxId);
+                        const checkbox = document.querySelector(`input[data-module="${module.name}"]`);
                         if (checkbox) {
                             checkbox.checked = true;
-                            const configId = {
-                                "Agendamento Online": "agendamentoConfig",
-                                "CARTÃO DE DESCONTO": "cartaoConfig",
-                                "SGO": "sgoConfig",
-                                "SMS": "smsConfig"
-                            }[module.name];
-                            if (configId) {
-                                document.getElementById(configId).style.display = 'block';
-                            }
                         }
                     });
+                    document.querySelector('.proposal-type-btn[data-type="aberta"]').click();
                 }
+
                 document.querySelector('[data-tab="proposal"]').click();
                 generateProposal();
+
                 alert(`✅ Proposta "${proposal.name}" carregada com sucesso!`);
             }, 100);
         }
+
         function deleteProposal(index) {
             if (!confirm("Tem certeza que deseja excluir esta proposta?")) return;
+
             let history = JSON.parse(localStorage.getItem('spdataProposalHistory') || '[]');
             history.splice(index, 1);
             localStorage.setItem('spdataProposalHistory', JSON.stringify(history));
+
             alert("✅ Proposta excluída com sucesso!");
             loadProposalHistory();
         }
+
         function printProposal(index) {
             loadProposal(index);
             setTimeout(() => {
                 window.print();
             }, 500);
         }
+
         function exportToExcel() {
             const table = document.querySelector('.proposal-table');
             const wb = XLSX.utils.table_to_book(table, { sheet: "Proposta Spdata" });
             const ws = wb.Sheets[wb.SheetNames[0]];
             const lastRow = XLSX.utils.decode_range(ws['!ref']).e.r + 2;
+
             ws[`A${lastRow}`] = { v: "TOTAL MENSAL", t: 's' };
             ws[`B${lastRow}`] = { v: parseFloat(document.getElementById('totalMensal').textContent.replace(/[^\d,-]/g, '').replace(',', '.')), t: 'n' };
             ws[`B${lastRow}`].z = '#,##0.00';
+
             ws[`A${lastRow + 1}`] = { v: "TOTAL IMPLANTAÇÃO", t: 's' };
             ws[`B${lastRow + 1}`] = { v: parseFloat(document.getElementById('totalImplantacao').textContent.replace(/[^\d,-]/g, '').replace(',', '.')), t: 'n' };
             ws[`B${lastRow + 1}`].z = '#,##0.00';
+
             ws[`A${lastRow + 2}`] = { v: "TOTAL GERAL", t: 's' };
             ws[`B${lastRow + 2}`] = { v: parseFloat(document.getElementById('totalGeral').textContent.replace(/[^\d,-]/g, '').replace(',', '.')), t: 'n' };
             ws[`B${lastRow + 2}`].z = '#,##0.00';
+
             ws[`A${lastRow + 4}`] = { v: "PARCELAS", t: 's' };
             ws[`B${lastRow + 4}`] = { v: document.getElementById('formaPagamento').textContent, t: 's' };
+
             ws[`A${lastRow + 5}`] = { v: "VALIDADE", t: 's' };
             ws[`B${lastRow + 5}`] = { v: "30 dias", t: 's' };
+
             const colWidths = [
                 { wch: 40 },
                 { wch: 20 },
                 { wch: 20 }
             ];
             ws['!cols'] = colWidths;
+
             XLSX.writeFile(wb, 'proposta_spdata.xlsx');
         }
     </script>
+    <!-- Font Awesome para os ícones -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
